@@ -21,10 +21,12 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
+    'assets/fonts/fonts.css'
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    '~/plugins/luxon.js'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -41,11 +43,39 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/i18n',
+    '@nuxtjs/svg'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {},
+
+  i18n: {
+    baseUrl: 'https://santiago.bike',
+    locales: [
+      {
+        code: 'en',
+        iso: 'en-US',
+        shortName: 'EN',
+        name: 'English',
+        isCatchallLocale: true
+      },
+      {
+        code: 'br',
+        iso: 'pt-BR',
+        shortName: 'PT-BR',
+        name: 'Português'
+      }
+    ],
+    defaultLocale: 'en',
+    detectBrowserLanguage: true,
+    strategy: 'no_prefix',
+    vueI18n: {
+      fallbackLocale: 'en'
+    },
+    vueI18nLoader: true
+  },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
