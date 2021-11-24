@@ -97,6 +97,8 @@
 </template>
 
 <script>
+import * as crypto from 'crypto';
+import * as url from 'url';
 import { Duration } from 'luxon'
 
 import StravaIcon from '~/assets/strava.svg?inline'
@@ -162,7 +164,7 @@ export default {
     },
 
     lastActivityStaticGoogleMap () {
-      const API_KEY = ''
+      const API_KEY = 'AIzaSyDDonBQFoIfn2oXn9DvTiDn_7O-MTSEt4A'
 
       let mapPolyline = this.strava.lastActivity.map.summary_polyline
       mapPolyline = mapPolyline.replace('\\\\', '\\')
@@ -173,6 +175,14 @@ export default {
       mapUrl.searchParams.append('maptype', 'roadmap')
       mapUrl.searchParams.append('path', `color:0xFC4C02FF|weight:5|enc:${mapPolyline}`)
       mapUrl.searchParams.append('key', API_KEY)
+
+      console.log(this.strava.lastActivity.map.summary_polyline)
+      console.log(mapPolyline)
+
+      // const urlToSign = mapUrl.toString()
+      // const secret = 'gMlsEMszpzJMHqMkj2cjkpevhR4='
+
+      // const signedUrl = this.signGoogleMapsUri(urlToSign, secret)
 
       return mapUrl.toString()
     },
@@ -191,6 +201,33 @@ export default {
       const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
 
       return `${formatter.format(meters)}`
+    }
+  },
+  methods: {
+    /**
+     * Takes a key and signs the data with it.
+     *
+     * @param  {string} key  Your unique secret key.
+     * @param  {string} data The url to sign.
+     * @return {string}
+     */
+    encodeBase64Hash (key, data) {
+      return crypto.createHmac('sha1', key).update(data).digest('base64')
+    },
+
+    /**
+     * Sign a URL using a secret key.
+     *
+     * @param  {string} path   The url you want to sign.
+     * @param  {string} secret Your unique secret key.
+     * @return {string}
+     */
+    signGoogleMapsUri (path, secret) {
+      const uri = new URL(path)
+      const dataToEncode = `${uri.pathname}?${uri.searchParams.toString()}`
+      const safeSecret = Buffer.from(secret, 'base64')
+      const hashedSignature = this.encodeBase64Hash(safeSecret, dataToEncode)
+      return uri.toString() + '&signature=' + hashedSignature
     }
   }
 }
