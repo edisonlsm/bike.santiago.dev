@@ -1,7 +1,0 @@
-name = "sign_google_map_worker"
-type = "javascript"
-
-account_id = "74d25d8b7fbbb58acbba3cafeb425477"
-workers_dev = true
-route = ""
-zone_id = ""
