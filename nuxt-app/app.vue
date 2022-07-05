@@ -1,6 +1,27 @@
 <template>
-  <div class="h-full">
-    <div class="m-8 flex justify-start items-center">
+  <div class="h-full w-full">
+    <div class="relative w-full h-full bg-black bg-opacity-30 bg-cover bg-center bg-blend-overlay" v-bind:style="{ backgroundImage: 'url(' + currentActivity.mapImage + ')' }">
+      <div class="inline-block p-4">
+        <StravaProfile :profile="data.profile" />
+      </div>
+      
+      <div class="absolute bottom-4 right-4 flex justify-start items-center bg-white rounded-lg">
+        <div class="w-full md:w-auto text-right">
+        <span class="block my-2 mx-4 text-strava-orange text-lg font-bold">
+          {{ $t('headings.last_ride') }}
+        </span>
+        <div class="my-2 mx-4">
+          <RideStats :activity="currentActivity" />
+        </div>
+        <!-- <hr class="border-2 text-strava-orange" />
+        <span class="block m-2 text-strava-orange text-lg font-bold">
+          {{ $t('headings.longest_ride') }}
+        </span> -->
+      </div>
+      </div>
+    </div>
+    
+    <!-- <div class="m-8 flex justify-start items-center">
       <img src="https://dgalywyr863hv.cloudfront.net/pictures/athletes/23428282/9877134/6/large.jpg" class="rounded-full">
       <StravaIcon class="h-12 w-12 text-strava-orange ml-2 fill-current" />
       <div class="flex flex-col items-start">
@@ -14,10 +35,10 @@
           {{ t('intro.add_strava') }}
         </a>
       </div>
-    </div>
+    </div> -->
 
-    <div class="flex justify-start">
-      <div class="m-8 w-full md:w-auto">
+    <!-- <div class="flex justify-start"> -->
+      <!-- <div class="m-8 w-full md:w-auto">
         <span class="mb-2 text-strava-orange text-2xl font-bold">
           {{ $t('headings.this_year') }}
         </span>
@@ -36,9 +57,9 @@
           <span class="font-bold">{{ thisYearClimbMeters }}</span>
           {{ $t('stats.meters') }}
         </p>
-      </div>
+      </div> -->
 
-      <div class="m-8 w-full md:w-auto">
+      <!-- <div class="m-8 w-full md:w-auto">
         <span class="mb-2 text-strava-orange text-2xl font-bold">
           {{ $t('headings.all_time') }}
         </span>
@@ -57,17 +78,17 @@
           <span class="font-bold">{{ allTimeClimbMeters }}</span>
           {{ $t('stats.meters') }}
         </p>
-      </div>
-    </div>
+      </div> -->
+    <!-- </div> -->
 
-    <div class="flex justify-start">
+    <!-- <div class="flex justify-start">
       <div class="m-8 w-full md:w-auto">
         <span class="mb-2 text-strava-orange text-2xl font-bold">
           {{ $t('headings.last_ride') }}:
         </span>
         <img
           :src="data.lastActivity.mapImage"
-          class="h-60"
+          class="h-96"
         >
         <span class="block pt-2 w-full">
           {{ data.lastActivity.name }}
@@ -92,7 +113,7 @@
         </span>
         <img
           :src="data.longestActivity.mapImage"
-          class="h-60"
+          class="h-96"
         >
         <span class="block pt-2 w-full">
           {{ data.longestActivity.name }}
@@ -110,21 +131,24 @@
           </span>
         </span>
       </div>
-    </div>
+    </div> -->
 
-    <footer class="fixed bottom-2 right-2 h-12 flex justify-end">
-      <PoweredByStravaLogo />
-    </footer>
+    <Attribution />
   </div>
 </template>
 
-<script setup>
-  import StravaIcon from '~/assets/strava.svg?component'
-  import PoweredByStravaLogo from '~/assets/powered_by_strava.svg?component'
+<style>
+html, body, #__nuxt, #__layout {
+  height: 100vh;
+}
+</style>
 
+<script setup>
   import { Duration } from 'luxon'
 
   import { useI18n } from "vue-i18n"
+  import Attribution from "./components/attribution.vue"
+  
   const { t } = useI18n()
 
   // Get token
@@ -137,7 +161,7 @@
       const access_token = await getStravaToken(runtimeConfig.stravaClientId, runtimeConfig.stravaClientSecret, runtimeConfig.stravaRefreshToken)
       
       // Get profile
-      const { firstname, lastname, profile } = await getStravaProfile(access_token)
+      const { profile_id, firstname, lastname, profile } = await getStravaProfile(access_token)
 
       // Get stats
       const { all_ride_totals, ytd_ride_totals } = await getStravaStats(access_token)
@@ -150,7 +174,10 @@
 
       const strava = {
         profile: {
-          firstname, lastname, picture: profile
+          id: profile_id,
+          firstname,
+          lastname,
+          picture: profile
         },
         stats: {
           all_ride_totals,
@@ -167,6 +194,19 @@
   if (error) {
     console.log(error)
   }
+
+  let currentActivity = data.value.lastActivity
+  const currentActivityDistance = computed(() => {
+    const meters = currentActivity.distance
+    const km = (meters / 1000).toFixed(2)
+    const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
+    return `${formatter.format(km)}`
+  })
+  const currentActivityClimbMeters = computed (() => {
+    const meters = currentActivity.total_elevation_gain
+    const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
+    return `${formatter.format(meters)}`
+  })
 
   const thisYearHours = computed(() => {
     const seconds = data.value.stats.ytd_ride_totals.moving_time
@@ -321,9 +361,10 @@
     const map_path = 'path-5+FC4C02-1.0' + '(' + encoded_polyline + ')'
 
     const image = await $fetch(
-      'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/' + map_path + '/auto/500x300',
+      'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/' + map_path + '/auto/1280x1280@2x',
       {
         params: {
+          padding: 128,
           access_token: mapbox_token
         }
       }
