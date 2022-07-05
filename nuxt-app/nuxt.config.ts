@@ -22,5 +22,11 @@ export default defineNuxtConfig({
           availableLocales: ["pt-BR", "en-US"],
           sync: true,
         },
+    },
+    runtimeConfig: {
+        stravaClientId: process.env.STRAVA_CLIENT_ID,
+        stravaClientSecret: process.env.STRAVA_CLIENT_SECRET,
+        stravaRefreshToken: process.env.STRAVA_REFRESH_TOKEN,
+        mapBoxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
     }
 })
