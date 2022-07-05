@@ -1,0 +1,25 @@
+{
+    "intro": {
+        "one": "Hi, I'm Edison Santiago and I really like cycling!",
+        "two": "I also like statistics, so I assembled this here so I can see all the stats that matter to me at one place :)",
+        "add_strava": "Add on Strava"
+    },
+    "headings": {
+        "all_time": "Since July 2017, I:",
+        "this_year": "This year, I:",
+        "last_ride": "Last ride",
+        "longest_ride": "Longest ride"
+    },
+    "stats": {
+        "stayed": "stayed",
+        "on_top_bicycle": "on top of the bicycle",
+        "ride": "ride",
+        "kilometers": "kilometers",
+        "climbed": "climbed",
+        "meters": "meters"
+    },
+    "activity": {
+        "distance": "Distance",
+        "elevation": "Elevation"
+    }
+}

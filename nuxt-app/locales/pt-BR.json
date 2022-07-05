@@ -1,0 +1,25 @@
+{
+    "intro": {
+        "one": "Olá! Me chamo Edison Santiago e eu realmente gosto de pedalar!",
+        "two": "Eu também gosto de estatísticas, então montei esta página para que eu possa ver todas as estatísticas relevantes em um lugar só :)",
+        "add_strava": "Adicionar no Strava"
+    },
+    "headings": {
+        "all_time": "Desde Julho de 2017, eu:",
+        "this_year": "Neste ano, eu já:",
+        "last_ride": "Último pedal",
+        "longest_ride": "Pedal mais longo"
+    },
+    "stats": {
+        "stayed": "passei",
+        "on_top_bicycle": "em cima da bicicleta",
+        "ride": "pedalei",
+        "kilometers": "quilômetros",
+        "climbed": "subi",
+        "meters": "metros"
+    },
+    "activity": {
+        "distance": "Distância",
+        "elevation": "Ganho de Elevação"
+    }
+}

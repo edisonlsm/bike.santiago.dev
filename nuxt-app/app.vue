@@ -1,19 +1,141 @@
 <template>
-  <div>
-    <NuxtWelcome />
+  <div class="h-full">
+    <div class="m-8 flex justify-start items-center">
+      <img src="https://dgalywyr863hv.cloudfront.net/pictures/athletes/23428282/9877134/6/large.jpg" class="rounded-full">
+      <StravaIcon class="h-12 w-12 text-strava-orange ml-2 fill-current" />
+      <div class="flex flex-col items-start">
+        <p class="text-2xl">
+          Edison Santiago
+        </p>
+        <a
+          href="https://www.strava.com/athletes/23428282"
+          class="text-strava-orange text-lg"
+        >
+          {{ t('intro.add_strava') }}
+        </a>
+      </div>
+    </div>
+
+    <div class="flex justify-start">
+      <div class="m-8 w-full md:w-auto">
+        <span class="mb-2 text-strava-orange text-2xl font-bold">
+          {{ $t('headings.this_year') }}
+        </span>
+        <p class="text-xl">
+          {{ $t('stats.stayed') }}
+          <span class="font-bold">{{ thisYearHours }}</span>
+          {{ $t('stats.on_top_bicycle') }}
+        </p>
+        <p class="text-xl">
+          {{ $t('stats.ride') }}
+          <span class="font-bold">{{ thisYearKms }}</span>
+          {{ $t('stats.kilometers') }}
+        </p>
+        <p class="text-xl">
+          {{ $t('stats.climbed') }}
+          <span class="font-bold">{{ thisYearClimbMeters }}</span>
+          {{ $t('stats.meters') }}
+        </p>
+      </div>
+
+      <div class="m-8 w-full md:w-auto">
+        <span class="mb-2 text-strava-orange text-2xl font-bold">
+          {{ $t('headings.all_time') }}
+        </span>
+        <p class="text-xl">
+          {{ $t('stats.stayed') }}
+          <span class="font-bold">{{ allTimeHours }}</span>
+          {{ $t('stats.on_top_bicycle') }}
+        </p>
+        <p class="text-xl">
+          {{ $t('stats.ride') }}
+          <span class="font-bold">{{ allTimeKms }}</span>
+          {{ $t('stats.kilometers') }}
+        </p>
+        <p class="text-xl">
+          {{ $t('stats.climbed') }}
+          <span class="font-bold">{{ allTimeClimbMeters }}</span>
+          {{ $t('stats.meters') }}
+        </p>
+      </div>
+    </div>
+
+    <div class="flex justify-start">
+      <div class="m-8 w-full md:w-auto">
+        <span class="mb-2 text-strava-orange text-2xl font-bold">
+          {{ $t('headings.last_ride') }}:
+        </span>
+        <img
+          :src="data.lastActivity.mapImage"
+          class="h-60"
+        >
+        <span class="block pt-2 w-full">
+          {{ data.lastActivity.name }}
+        </span>
+        <span class="block pt-2 w-full">
+          {{ $t('activity.distance') }}:
+          <span class="font-bold text-strava-orange">
+            {{ lastActivityDistance }}km
+          </span>
+        </span>
+        <span class="block pt-2 w-full">
+          {{ $t('activity.elevation') }}:
+          <span class="font-bold text-strava-orange">
+            {{ lastActivityClimbMeters }}m
+          </span>
+        </span>
+      </div>
+
+      <div class="m-8 w-full md:w-auto">
+        <span class="mb-2 text-strava-orange text-2xl font-bold">
+          {{ $t('headings.longest_ride') }}
+        </span>
+        <img
+          :src="data.longestActivity.mapImage"
+          class="h-60"
+        >
+        <span class="block pt-2 w-full">
+          {{ data.longestActivity.name }}
+        </span>
+        <span class="block pt-2 w-full">
+          {{ $t('activity.distance') }}:
+          <span class="font-bold text-strava-orange">
+            {{ longestActivityDistance }}km
+          </span>
+        </span>
+        <span class="block pt-2 w-full">
+          {{ $t('activity.elevation') }}:
+          <span class="font-bold text-strava-orange">
+            {{ longestActivityClimbMeters }}m
+          </span>
+        </span>
+      </div>
+    </div>
+
+    <footer class="fixed bottom-2 right-2 h-12 flex justify-end">
+      <PoweredByStravaLogo />
+    </footer>
   </div>
 </template>
 
 <script setup>
+  import StravaIcon from '~/assets/strava.svg?component'
+  import PoweredByStravaLogo from '~/assets/powered_by_strava.svg?component'
+
+  import { Duration } from 'luxon'
+
+  import { useI18n } from "vue-i18n"
+  const { t } = useI18n()
+
   // Get token
-  const { data } = await useAsyncData(
+  const { data, pending, error, refresh } = await useAsyncData(
     'strava info',
     async () => {
       const runtimeConfig = useRuntimeConfig()
 
       // Get token
       const access_token = await getStravaToken(runtimeConfig.stravaClientId, runtimeConfig.stravaClientSecret, runtimeConfig.stravaRefreshToken)
-
+      
       // Get profile
       const { firstname, lastname, profile } = await getStravaProfile(access_token)
 
@@ -40,17 +162,82 @@
 
       return strava
     },
-
   )
 
-  console.log(data);
+  if (error) {
+    console.log(error)
+  }
+
+  const thisYearHours = computed(() => {
+    const seconds = data.value.stats.ytd_ride_totals.moving_time
+    const duration = Duration.fromObject({ seconds })
+    const formattedDuration = duration.toFormat('d h m')
+    const values = formattedDuration.split(' ')
+    return `${values[0]} d, ${values[1]} h, ${values[2]} min`
+  })
+  const thisYearKms = computed(() => {
+    const meters = data.value.stats.ytd_ride_totals.distance
+    const km = Math.floor(meters / 1000)
+    const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
+    return `${formatter.format(km)}`
+  })
+  const thisYearClimbMeters = computed(() => {
+    const meters = data.value.stats.ytd_ride_totals.elevation_gain
+    const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
+    return `${formatter.format(meters)}`
+  })
+
+  const allTimeHours = computed(() => {
+    const seconds = data.value.stats.all_ride_totals.moving_time
+    const duration = Duration.fromObject({ seconds })
+    const formattedDuration = duration.toFormat('d h m')
+    const values = formattedDuration.split(' ')
+    return `${values[0]} d, ${values[1]} h, ${values[2]} min`
+  })
+  const allTimeKms = computed(() => {
+    const meters = data.value.stats.all_ride_totals.distance
+    const km = Math.floor(meters / 1000)
+    const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
+    return `${formatter.format(km)}`
+  })
+  const allTimeClimbMeters = computed(() => {
+    const meters = data.value.stats.all_ride_totals.elevation_gain
+    const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
+    return `${formatter.format(meters)}`
+  })
+
+  const lastActivityDistance = computed(() => {
+    const meters = data.value.lastActivity.distance
+    const km = (meters / 1000).toFixed(2)
+    const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
+    return `${formatter.format(km)}`
+  })
+  const lastActivityClimbMeters = computed (() => {
+    const meters = data.value.lastActivity.total_elevation_gain
+    const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
+    return `${formatter.format(meters)}`
+  })
+
+
+  const longestActivityDistance = computed(() => {
+    const meters = data.value.longestActivity.distance
+    const km = (meters / 1000).toFixed(2)
+    const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
+    return `${formatter.format(km)}`
+  })
+  const longestActivityClimbMeters = computed (() => {
+    const meters = data.value.longestActivity.total_elevation_gain
+    const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
+    return `${formatter.format(meters)}`
+  })
+
 </script>
 
 <script>
   const STRAVA_API_URL = 'https://www.strava.com/api/v3'
 
   const LONGEST_ACTIVITY_ID = '6569620057'
-  
+
   async function getStravaToken(client_id, client_secret, refresh_token) {
     const { access_token }  = await $fetch('https://www.strava.com/oauth/token', {
       method: 'POST',
@@ -141,7 +328,12 @@
         }
       }
     )
-    
-    return image;
+
+    const buffer = Buffer.from(await image.arrayBuffer())
+    const b64 = buffer.toString('base64')
+
+    const base64 = 'data:image/png;base64,' + b64
+
+    return base64;
   }
 </script>
