@@ -1,137 +1,30 @@
 <template>
   <div class="h-full w-full">
-    <div class="relative w-full h-full bg-black bg-opacity-30 bg-cover bg-center bg-blend-overlay" v-bind:style="{ backgroundImage: 'url(' + currentActivity.mapImage + ')' }">
-      <div class="inline-block p-4">
+    <div class="relative w-full h-full bg-black bg-opacity-30 bg-cover bg-center bg-blend-overlay" v-bind:style="mainBackgroundStyle">
+      <div class="inline-block m-4 p-4 bg-white rounded-lg">
         <StravaProfile :profile="data.profile" />
+        <!-- <GeneralStats :title="$t('headings.this_year')" :stat="data.stats.ytd_ride_totals" />
+        <GeneralStats :title="$t('headings.all_time')" :stat="data.stats.all_ride_totals" /> -->
       </div>
       
       <div class="absolute bottom-4 right-4 flex justify-start items-center bg-white rounded-lg">
         <div class="w-full md:w-auto text-right">
-        <span class="block my-2 mx-4 text-strava-orange text-lg font-bold">
-          {{ $t('headings.last_ride') }}
-        </span>
-        <div class="my-2 mx-4">
-          <RideStats :activity="currentActivity" />
+          <!-- <span class="block my-2 mx-4 text-strava-orange text-lg font-bold">
+            {{ $t('headings.last_ride') }}
+          </span>
+          <div class="my-2 mx-4">
+            <RideStats :activity="data.lastActivity" />
+          </div>
+          <hr class="border-2 text-strava-orange" /> -->
+          <span class="block m-2 text-strava-orange text-lg font-bold">
+            {{ $t('headings.longest_ride') }}
+          </span>
+          <div class="my-2 mx-4">
+            <RideStats :activity="data.longestActivity" />
+          </div>
         </div>
-        <!-- <hr class="border-2 text-strava-orange" />
-        <span class="block m-2 text-strava-orange text-lg font-bold">
-          {{ $t('headings.longest_ride') }}
-        </span> -->
-      </div>
       </div>
     </div>
-    
-    <!-- <div class="m-8 flex justify-start items-center">
-      <img src="https://dgalywyr863hv.cloudfront.net/pictures/athletes/23428282/9877134/6/large.jpg" class="rounded-full">
-      <StravaIcon class="h-12 w-12 text-strava-orange ml-2 fill-current" />
-      <div class="flex flex-col items-start">
-        <p class="text-2xl">
-          Edison Santiago
-        </p>
-        <a
-          href="https://www.strava.com/athletes/23428282"
-          class="text-strava-orange text-lg"
-        >
-          {{ t('intro.add_strava') }}
-        </a>
-      </div>
-    </div> -->
-
-    <!-- <div class="flex justify-start"> -->
-      <!-- <div class="m-8 w-full md:w-auto">
-        <span class="mb-2 text-strava-orange text-2xl font-bold">
-          {{ $t('headings.this_year') }}
-        </span>
-        <p class="text-xl">
-          {{ $t('stats.stayed') }}
-          <span class="font-bold">{{ thisYearHours }}</span>
-          {{ $t('stats.on_top_bicycle') }}
-        </p>
-        <p class="text-xl">
-          {{ $t('stats.ride') }}
-          <span class="font-bold">{{ thisYearKms }}</span>
-          {{ $t('stats.kilometers') }}
-        </p>
-        <p class="text-xl">
-          {{ $t('stats.climbed') }}
-          <span class="font-bold">{{ thisYearClimbMeters }}</span>
-          {{ $t('stats.meters') }}
-        </p>
-      </div> -->
-
-      <!-- <div class="m-8 w-full md:w-auto">
-        <span class="mb-2 text-strava-orange text-2xl font-bold">
-          {{ $t('headings.all_time') }}
-        </span>
-        <p class="text-xl">
-          {{ $t('stats.stayed') }}
-          <span class="font-bold">{{ allTimeHours }}</span>
-          {{ $t('stats.on_top_bicycle') }}
-        </p>
-        <p class="text-xl">
-          {{ $t('stats.ride') }}
-          <span class="font-bold">{{ allTimeKms }}</span>
-          {{ $t('stats.kilometers') }}
-        </p>
-        <p class="text-xl">
-          {{ $t('stats.climbed') }}
-          <span class="font-bold">{{ allTimeClimbMeters }}</span>
-          {{ $t('stats.meters') }}
-        </p>
-      </div> -->
-    <!-- </div> -->
-
-    <!-- <div class="flex justify-start">
-      <div class="m-8 w-full md:w-auto">
-        <span class="mb-2 text-strava-orange text-2xl font-bold">
-          {{ $t('headings.last_ride') }}:
-        </span>
-        <img
-          :src="data.lastActivity.mapImage"
-          class="h-96"
-        >
-        <span class="block pt-2 w-full">
-          {{ data.lastActivity.name }}
-        </span>
-        <span class="block pt-2 w-full">
-          {{ $t('activity.distance') }}:
-          <span class="font-bold text-strava-orange">
-            {{ lastActivityDistance }}km
-          </span>
-        </span>
-        <span class="block pt-2 w-full">
-          {{ $t('activity.elevation') }}:
-          <span class="font-bold text-strava-orange">
-            {{ lastActivityClimbMeters }}m
-          </span>
-        </span>
-      </div>
-
-      <div class="m-8 w-full md:w-auto">
-        <span class="mb-2 text-strava-orange text-2xl font-bold">
-          {{ $t('headings.longest_ride') }}
-        </span>
-        <img
-          :src="data.longestActivity.mapImage"
-          class="h-96"
-        >
-        <span class="block pt-2 w-full">
-          {{ data.longestActivity.name }}
-        </span>
-        <span class="block pt-2 w-full">
-          {{ $t('activity.distance') }}:
-          <span class="font-bold text-strava-orange">
-            {{ longestActivityDistance }}km
-          </span>
-        </span>
-        <span class="block pt-2 w-full">
-          {{ $t('activity.elevation') }}:
-          <span class="font-bold text-strava-orange">
-            {{ longestActivityClimbMeters }}m
-          </span>
-        </span>
-      </div>
-    </div> -->
 
     <Attribution />
   </div>
@@ -144,14 +37,9 @@ html, body, #__nuxt, #__layout {
 </style>
 
 <script setup>
-  import { Duration } from 'luxon'
+  import { computed } from '@vue/reactivity';
+  import * as fs from 'fs';
 
-  import { useI18n } from "vue-i18n"
-  import Attribution from "./components/attribution.vue"
-  
-  const { t } = useI18n()
-
-  // Get token
   const { data, pending, error, refresh } = await useAsyncData(
     'strava info',
     async () => {
@@ -195,82 +83,12 @@ html, body, #__nuxt, #__layout {
     console.log(error)
   }
 
-  let currentActivity = data.value.lastActivity
-  const currentActivityDistance = computed(() => {
-    const meters = currentActivity.distance
-    const km = (meters / 1000).toFixed(2)
-    const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
-    return `${formatter.format(km)}`
-  })
-  const currentActivityClimbMeters = computed (() => {
-    const meters = currentActivity.total_elevation_gain
-    const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
-    return `${formatter.format(meters)}`
-  })
+  const isShowingLastActivity = false;
 
-  const thisYearHours = computed(() => {
-    const seconds = data.value.stats.ytd_ride_totals.moving_time
-    const duration = Duration.fromObject({ seconds })
-    const formattedDuration = duration.toFormat('d h m')
-    const values = formattedDuration.split(' ')
-    return `${values[0]} d, ${values[1]} h, ${values[2]} min`
+  const mainBackgroundStyle = computed(() => {
+    const activity = isShowingLastActivity ? data.value.lastActivity : data.value.longestActivity
+    return { backgroundImage: 'url(' + activity.mapImage + ')' }
   })
-  const thisYearKms = computed(() => {
-    const meters = data.value.stats.ytd_ride_totals.distance
-    const km = Math.floor(meters / 1000)
-    const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
-    return `${formatter.format(km)}`
-  })
-  const thisYearClimbMeters = computed(() => {
-    const meters = data.value.stats.ytd_ride_totals.elevation_gain
-    const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
-    return `${formatter.format(meters)}`
-  })
-
-  const allTimeHours = computed(() => {
-    const seconds = data.value.stats.all_ride_totals.moving_time
-    const duration = Duration.fromObject({ seconds })
-    const formattedDuration = duration.toFormat('d h m')
-    const values = formattedDuration.split(' ')
-    return `${values[0]} d, ${values[1]} h, ${values[2]} min`
-  })
-  const allTimeKms = computed(() => {
-    const meters = data.value.stats.all_ride_totals.distance
-    const km = Math.floor(meters / 1000)
-    const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
-    return `${formatter.format(km)}`
-  })
-  const allTimeClimbMeters = computed(() => {
-    const meters = data.value.stats.all_ride_totals.elevation_gain
-    const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
-    return `${formatter.format(meters)}`
-  })
-
-  const lastActivityDistance = computed(() => {
-    const meters = data.value.lastActivity.distance
-    const km = (meters / 1000).toFixed(2)
-    const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
-    return `${formatter.format(km)}`
-  })
-  const lastActivityClimbMeters = computed (() => {
-    const meters = data.value.lastActivity.total_elevation_gain
-    const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
-    return `${formatter.format(meters)}`
-  })
-
-
-  const longestActivityDistance = computed(() => {
-    const meters = data.value.longestActivity.distance
-    const km = (meters / 1000).toFixed(2)
-    const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
-    return `${formatter.format(km)}`
-  })
-  const longestActivityClimbMeters = computed (() => {
-    const meters = data.value.longestActivity.total_elevation_gain
-    const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
-    return `${formatter.format(meters)}`
-  })
-
 </script>
 
 <script>
@@ -375,6 +193,14 @@ html, body, #__nuxt, #__layout {
 
     const base64 = 'data:image/png;base64,' + b64
 
-    return base64;
+    return base64
+
+    // const fileName = './assets/' + b64.substring(0, 10) + '.png'
+
+    // console.log(fileName)
+
+    // await fs.promises.writeFile(fileName, buffer)
+
+    // return fileName;
   }
 </script>
