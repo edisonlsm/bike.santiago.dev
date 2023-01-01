@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full w-full">
+  <div class="w-full h-screen">
     <div class="relative w-full h-full">
 
       <div class="absolute top-0 left-0 w-full h-full z-0" :class="activityMapScrollStyle" ref="mapScroll">
@@ -53,7 +53,7 @@
 
 <style>
 html, body, #__nuxt, #__layout {
-  height: 100vh;
+  height: 100%;
 }
 </style>
 
