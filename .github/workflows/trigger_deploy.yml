@@ -1,5 +1,6 @@
 # Trigger a build deploy on Cloudflare Pages by calling the Deploy Hook POST URL every day
 
+name: Trigger Cloudflare Pages build
 on:
   schedule:
     - cron: '0 2 * * *'
