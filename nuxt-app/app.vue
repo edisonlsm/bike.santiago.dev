@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-screen">
+  <div class="w-full h-full">
     <div class="relative w-full h-full">
 
       <div class="absolute top-0 left-0 w-full h-full z-0" :class="activityMapScrollStyle" ref="mapScroll">
