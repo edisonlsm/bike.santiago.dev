@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full md:w-auto">
+  <div class="w-full sm:w-auto">
     <span class="mb-2 text-strava-orange text-2xl font-bold">
       {{ title }}
     </span>

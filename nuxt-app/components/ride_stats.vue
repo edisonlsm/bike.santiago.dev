@@ -1,7 +1,7 @@
 <template>
   <div>
     <a :href="'https://www.strava.com/activities/' + activity.id" target="_blank" class="hover:underline">
-      <span class="block pt-2 w-full font-bold text-xl">
+      <span class="block w-full font-bold text-xl">
         {{ activity.name }}
       </span>
     </a>

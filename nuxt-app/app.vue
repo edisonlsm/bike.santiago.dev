@@ -1,32 +1,37 @@
 <template>
   <div class="h-full w-full">
-    <div class="relative w-full h-full bg-black bg-opacity-30 bg-cover bg-center bg-blend-overlay" v-bind:style="mainBackgroundStyle">
-      <div class="inline-block m-4 p-4 bg-white rounded-lg">
-        <StravaProfile :profile="data.profile" />
-        <!-- <GeneralStats :title="$t('headings.this_year')" :stat="data.stats.ytd_ride_totals" />
-        <GeneralStats :title="$t('headings.all_time')" :stat="data.stats.all_ride_totals" /> -->
-      </div>
-      
-      <div class="absolute bottom-4 right-4 flex justify-start items-center bg-white rounded-lg">
-        <div class="w-full md:w-auto text-right">
-          <!-- <span class="block my-2 mx-4 text-strava-orange text-lg font-bold">
-            {{ $t('headings.last_ride') }}
-          </span>
-          <div class="my-2 mx-4">
-            <RideStats :activity="data.lastActivity" />
-          </div>
-          <hr class="border-2 text-strava-orange" /> -->
-          <span class="block m-2 text-strava-orange text-lg font-bold">
-            {{ $t('headings.longest_ride') }}
-          </span>
-          <div class="my-2 mx-4">
-            <RideStats :activity="data.longestActivity" />
-          </div>
+    <div class="relative w-full h-full">
+
+      <div class="absolute top-0 left-0 w-full h-full z-0" ref="mapScroll" :style="activityMapScrollStyle">
+        <div class="relative" :style="activityMapWrapperStyle">
+          <img :src="currentActivityMap" :style="activityMapStyle" />
+          <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-30"></div>
         </div>
+      </div>
+
+      <StatsCard class="w-full sm:w-fit">
+        <StravaProfile :profile="data.profile" />
+        <!-- <GeneralStats :title="$t('headings.this_year')" :stat="data.stats.ytd_ride_totals" /> -->
+        <!-- <GeneralStats :title="$t('headings.all_time')" :stat="data.stats.all_ride_totals" /> -->
+      </StatsCard>
+
+      <div class="absolute bottom-0 right-0 flex flex-col sm:flex-row justify-center sm:justify-between items-end w-full">
+        <StatsCard class="order-1 sm:order-2 w-full sm:w-auto">
+          <div class="w-full sm:w-auto flex flex-row sm:flex-col justify-around sm:justify-start items-center sm:items-start space-x-8 sm:space-x-0 space-y-0 sm:space-y-2">
+            <span class="block text-strava-orange text-lg font-bold">
+              {{ isShowingLastActivity ? $t('headings.last_ride') : $t('headings.longest_ride') }}
+            </span>
+            <div class="">
+              <RideStats :activity="currentActivity" />
+            </div>
+          </div>
+        </StatsCard>
+
+        <Attribution class="order-2 sm:order-1" />
       </div>
     </div>
 
-    <Attribution />
+    
   </div>
 </template>
 
@@ -83,11 +88,68 @@ html, body, #__nuxt, #__layout {
     console.log(error)
   }
 
-  const isShowingLastActivity = false;
+  const isShowingLastActivity = ref(true);
 
-  const mainBackgroundStyle = computed(() => {
-    const activity = isShowingLastActivity ? data.value.lastActivity : data.value.longestActivity
-    return { backgroundImage: 'url(' + activity.mapImage + ')' }
+  const viewportWidth = ref(0);
+  const viewportHeight = ref(0);
+
+  const mapScroll = ref(null)
+
+  onMounted(() => {
+    viewportWidth.value = window.innerWidth
+    viewportHeight.value = window.innerHeight
+
+    console.log(mapScroll.value)
+
+    nextTick(() => {
+      if (viewportWidth.value > viewportHeight.value) {
+        mapScroll.value.scrollTop = (mapScroll.value.scrollTopMax / 2)
+      }
+      else {
+        mapScroll.value.scrollLeft = (mapScroll.value.scrollLeftMax / 2)
+      }
+    })
+
+    window.onresize = (e) => {
+      viewportWidth.value = window.innerWidth
+      viewportHeight.value = window.innerHeight
+    }
+  })
+
+  const currentActivity = computed(() => {
+    return isShowingLastActivity.value ? data.value.lastActivity : data.value.longestActivity
+  })
+
+  const currentActivityMap = computed(() => {
+    const activity = isShowingLastActivity.value ? data.value.lastActivity : data.value.longestActivity
+    return activity.mapImage
+  })
+
+  const activityMapScrollStyle = computed(() => {
+    if (viewportWidth.value > viewportHeight.value) {
+      return { overflowX: 'hidden', overflowY: 'scroll' }
+    }
+    else {
+      return { overflowX: 'scroll', overflowY: 'hidden' }
+    }
+  })
+
+  const activityMapWrapperStyle = computed(() => {
+    if (viewportWidth.value > viewportHeight.value) {
+      return { width: '100%', height: 'auto' }
+    }
+    else {
+      return { width: 'fit-content', height: '100%' }
+    }
+  })
+
+  const activityMapStyle = computed(() => {
+    if (viewportWidth.value > viewportHeight.value) {
+      return { maxWidth: '100%', width: '100%', height: 'auto' }
+    }
+    else {
+      return { maxWidth: 'none', width: 'auto', height: '100%' }
+    }
   })
 </script>
 

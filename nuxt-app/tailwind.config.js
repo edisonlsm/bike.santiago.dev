@@ -5,6 +5,9 @@ module.exports = {
     extend: {
       colors: {
         'strava-orange': '#FC4C02'
+      },
+      fontSize: {
+        xxs: '0.6rem'
       }
     },
   },
