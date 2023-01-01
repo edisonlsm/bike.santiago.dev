@@ -13,6 +13,8 @@
         "see_longest_ride": "Ver pedal mais longo"
     },
     "stats": {
+        "show": "Ver estatísticas",
+        "hide": "Esconder estatísticas",
         "stayed": "passei",
         "on_top_bicycle": "em cima da bicicleta",
         "ride": "pedalei",

@@ -12,16 +12,21 @@
       <div class="absolute top-0 left-0 flex flex-col sm:flex-row justify-center sm:justify-between items-end sm:items-start w-full">
         <StatsCard class="w-full sm:w-fit">
           <StravaProfile :profile="data.profile" />
-          <!-- <GeneralStats :title="$t('headings.this_year')" :stat="data.stats.ytd_ride_totals" /> -->
-          <!-- <GeneralStats :title="$t('headings.all_time')" :stat="data.stats.all_ride_totals" /> -->
+
+          <button class="mt-3 text-strava-orange text-sm" @click="isShowingAthleteStats = !isShowingAthleteStats">
+            {{ isShowingAthleteStats ? $t('stats.hide') : $t('stats.show') }}
+          </button>
+
+          <div class="general-stats overflow-hidden" :class="isShowingAthleteStats ? 'max-h-96' : 'max-h-0'">
+            <GeneralStats class="pt-4 " :title="$t('headings.this_year')" :stat="data.stats.ytd_ride_totals" />
+            <GeneralStats class="pt-2" :title="$t('headings.all_time')" :stat="data.stats.all_ride_totals" />
+          </div>
         </StatsCard>
 
         <button class="mx-4 mt-0 mb-4 sm:my-4 sm:mr-8 px-4 py-2 text-xs rounded-lg bg-strava-orange bg-opacity-50 hover:bg-opacity-100 text-white" @click="isShowingLastActivity = !isShowingLastActivity">
           {{ isShowingLastActivity ? $t('headings.see_longest_ride') : $t('headings.see_last_ride') }}
         </button>
       </div>
-
-      
 
       <div class="absolute bottom-0 right-0 flex flex-col sm:flex-row justify-center sm:justify-between items-end w-full">
         <StatsCard class="order-1 sm:order-2 w-full sm:w-auto sm:pr-8">
@@ -99,6 +104,7 @@ html, body, #__nuxt, #__layout {
   }
 
   const isShowingLastActivity = ref(false);
+  const isShowingAthleteStats = ref(true);
 
   const viewportWidth = ref(0);
   const viewportHeight = ref(0);
@@ -116,7 +122,6 @@ html, body, #__nuxt, #__layout {
       else {
         mapScroll.value.scrollLeft = (mapScroll.value.scrollLeftMax / 2)
       }
-      console.log(mapScroll.value)
     })
 
     window.onresize = (e) => {
@@ -161,6 +166,12 @@ html, body, #__nuxt, #__layout {
     }
   })
 </script>
+
+<style lang="pcss">
+.general-stats {
+  transition: max-height 0.25s linear;
+}
+</style>
 
 <script>
   const STRAVA_API_URL = 'https://www.strava.com/api/v3'

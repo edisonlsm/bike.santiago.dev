@@ -1,19 +1,19 @@
 <template>
   <div class="w-full sm:w-auto">
-    <span class="mb-2 text-strava-orange text-2xl font-bold">
+    <span class="mb-2 text-strava-orange text-lg font-bold">
       {{ title }}
     </span>
-    <p class="text-xl">
+    <p class="text-base">
       {{ $t('stats.stayed') }}
       <span class="font-bold">{{ statHours }}</span>
       {{ $t('stats.on_top_bicycle') }}
     </p>
-    <p class="text-xl">
+    <p class="text-base">
       {{ $t('stats.ride') }}
       <span class="font-bold">{{ statKms }}</span>
       {{ $t('stats.kilometers') }}
     </p>
-    <p class="text-xl">
+    <p class="text-base">
       {{ $t('stats.climbed') }}
       <span class="font-bold">{{ statClimbedMeters }}</span>
       {{ $t('stats.meters') }}

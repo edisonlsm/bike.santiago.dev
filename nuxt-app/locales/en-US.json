@@ -13,6 +13,8 @@
         "see_longest_ride": "See longest ride"
     },
     "stats": {
+        "show": "Show stats",
+        "hide": "Hide stats",
         "stayed": "stayed",
         "on_top_bicycle": "on top of the bicycle",
         "ride": "ride",
