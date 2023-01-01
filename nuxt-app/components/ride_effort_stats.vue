@@ -1,11 +1,6 @@
 <template>
   <div>
-    <a :href="'https://www.strava.com/activities/' + activity.id" target="_blank" class="hover:underline">
-      <span class="block w-full font-bold text-xl">
-        {{ activity.name }}
-      </span>
-    </a>
-    <span class="block pt-2 w-full">
+    <span class="block w-full">
       {{ $t('activity.distance') }}:
       <span class="font-bold text-strava-orange">
         {{ activityDistance }}km

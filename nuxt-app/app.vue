@@ -18,11 +18,14 @@
       <div class="absolute bottom-0 right-0 flex flex-col sm:flex-row justify-center sm:justify-between items-end w-full">
         <StatsCard class="order-1 sm:order-2 w-full sm:w-auto sm:pr-8">
           <div class="w-full sm:w-auto flex flex-row sm:flex-col justify-around sm:justify-start items-center sm:items-start space-x-8 sm:space-x-0 space-y-0 sm:space-y-2">
-            <span class="block text-strava-orange text-lg font-bold">
-              {{ isShowingLastActivity ? $t('headings.last_ride') : $t('headings.longest_ride') }}
-            </span>
+            <div>
+              <span class="block text-strava-orange text-lg font-bold">
+                {{ isShowingLastActivity ? $t('headings.last_ride') : $t('headings.longest_ride') }}
+              </span>
+              <RideGeneralStats :activity="currentActivity" />
+            </div>
             <div class="">
-              <RideStats :activity="currentActivity" />
+              <RideEffortStats :activity="currentActivity" />
             </div>
           </div>
         </StatsCard>
@@ -43,7 +46,6 @@ html, body, #__nuxt, #__layout {
 
 <script setup>
   import { computed } from '@vue/reactivity';
-  import * as fs from 'fs';
 
   const { data, pending, error, refresh } = await useAsyncData(
     'strava info',
@@ -98,8 +100,6 @@ html, body, #__nuxt, #__layout {
   onMounted(() => {
     viewportWidth.value = window.innerWidth
     viewportHeight.value = window.innerHeight
-
-    console.log(mapScroll.value)
 
     nextTick(() => {
       if (viewportWidth.value > viewportHeight.value) {
