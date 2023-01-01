@@ -127,10 +127,10 @@ html, body, #__nuxt, #__layout {
 
   const activityMapScrollStyle = computed(() => {
     if (viewportWidth.value > viewportHeight.value) {
-      return { overflowX: 'hidden', overflowY: 'scroll' }
+      return { 'overflow-x': 'hidden', 'overflow-y': 'scroll' }
     }
     else {
-      return { overflowX: 'scroll', overflowY: 'hidden' }
+      return { 'overflow-x': 'scroll', 'overflow-y': 'hidden' }
     }
   })
 
