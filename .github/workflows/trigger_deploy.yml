@@ -1,0 +1,19 @@
+# Trigger a build deploy on Cloudflare Pages by calling the Deploy Hook POST URL every day
+
+on:
+  schedule:
+    - cron: '0 2 * * *'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  # Build job
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Call Deploy Hook URL
+      uses: fjogeleit/http-request-action@v1
+      with:
+        url: ${{ secrets.DEPLOY_TRIGGER_URL }}
+        method: 'POST'
