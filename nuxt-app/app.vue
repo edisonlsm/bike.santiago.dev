@@ -2,7 +2,7 @@
   <div class="h-full w-full">
     <div class="relative w-full h-full">
 
-      <div class="absolute top-0 left-0 w-full h-full z-0" ref="mapScroll" :style="activityMapScrollStyle">
+      <div class="absolute top-0 left-0 w-full h-full z-0" :class="activityMapScrollStyle" ref="mapScroll">
         <div class="relative" :style="activityMapWrapperStyle">
           <img :src="currentActivityMap" :style="activityMapStyle" />
           <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-30"></div>
@@ -16,7 +16,7 @@
       </StatsCard>
 
       <div class="absolute bottom-0 right-0 flex flex-col sm:flex-row justify-center sm:justify-between items-end w-full">
-        <StatsCard class="order-1 sm:order-2 w-full sm:w-auto">
+        <StatsCard class="order-1 sm:order-2 w-full sm:w-auto sm:pr-8">
           <div class="w-full sm:w-auto flex flex-row sm:flex-col justify-around sm:justify-start items-center sm:items-start space-x-8 sm:space-x-0 space-y-0 sm:space-y-2">
             <span class="block text-strava-orange text-lg font-bold">
               {{ isShowingLastActivity ? $t('headings.last_ride') : $t('headings.longest_ride') }}
@@ -54,7 +54,7 @@ html, body, #__nuxt, #__layout {
       const access_token = await getStravaToken(runtimeConfig.stravaClientId, runtimeConfig.stravaClientSecret, runtimeConfig.stravaRefreshToken)
       
       // Get profile
-      const { profile_id, firstname, lastname, profile } = await getStravaProfile(access_token)
+      const { id, firstname, lastname, profile } = await getStravaProfile(access_token)
 
       // Get stats
       const { all_ride_totals, ytd_ride_totals } = await getStravaStats(access_token)
@@ -67,7 +67,7 @@ html, body, #__nuxt, #__layout {
 
       const strava = {
         profile: {
-          id: profile_id,
+          id: id,
           firstname,
           lastname,
           picture: profile
@@ -88,7 +88,7 @@ html, body, #__nuxt, #__layout {
     console.log(error)
   }
 
-  const isShowingLastActivity = ref(true);
+  const isShowingLastActivity = ref(false);
 
   const viewportWidth = ref(0);
   const viewportHeight = ref(0);
@@ -127,10 +127,10 @@ html, body, #__nuxt, #__layout {
 
   const activityMapScrollStyle = computed(() => {
     if (viewportWidth.value > viewportHeight.value) {
-      return { 'overflow-x': 'hidden', 'overflow-y': 'scroll' }
+      return ['overflow-x-hidden', 'overflow-y-scroll']
     }
     else {
-      return { 'overflow-x': 'scroll', 'overflow-y': 'hidden' }
+      return ['overflow-x-scroll', 'overflow-y-hidden']
     }
   })
 
@@ -256,13 +256,5 @@ html, body, #__nuxt, #__layout {
     const base64 = 'data:image/png;base64,' + b64
 
     return base64
-
-    // const fileName = './assets/' + b64.substring(0, 10) + '.png'
-
-    // console.log(fileName)
-
-    // await fs.promises.writeFile(fileName, buffer)
-
-    // return fileName;
   }
 </script>
