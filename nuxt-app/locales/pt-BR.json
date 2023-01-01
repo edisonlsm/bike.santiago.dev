@@ -8,7 +8,9 @@
         "all_time": "Desde Julho de 2017, eu:",
         "this_year": "Neste ano, eu já:",
         "last_ride": "Último pedal",
-        "longest_ride": "Pedal mais longo"
+        "see_last_ride": "Ver último pedal",
+        "longest_ride": "Pedal mais longo",
+        "see_longest_ride": "Ver pedal mais longo"
     },
     "stats": {
         "stayed": "passei",

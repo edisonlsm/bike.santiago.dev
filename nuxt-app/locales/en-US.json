@@ -8,7 +8,9 @@
         "all_time": "Since July 2017, I:",
         "this_year": "This year, I:",
         "last_ride": "Last ride",
-        "longest_ride": "Longest ride"
+        "see_last_ride": "See last ride",
+        "longest_ride": "Longest ride",
+        "see_longest_ride": "See longest ride"
     },
     "stats": {
         "stayed": "stayed",

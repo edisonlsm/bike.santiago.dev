@@ -9,11 +9,19 @@
         </div>
       </div>
 
-      <StatsCard class="w-full sm:w-fit">
-        <StravaProfile :profile="data.profile" />
-        <!-- <GeneralStats :title="$t('headings.this_year')" :stat="data.stats.ytd_ride_totals" /> -->
-        <!-- <GeneralStats :title="$t('headings.all_time')" :stat="data.stats.all_ride_totals" /> -->
-      </StatsCard>
+      <div class="absolute top-0 left-0 flex flex-col sm:flex-row justify-center sm:justify-between items-end sm:items-start w-full">
+        <StatsCard class="w-full sm:w-fit">
+          <StravaProfile :profile="data.profile" />
+          <!-- <GeneralStats :title="$t('headings.this_year')" :stat="data.stats.ytd_ride_totals" /> -->
+          <!-- <GeneralStats :title="$t('headings.all_time')" :stat="data.stats.all_ride_totals" /> -->
+        </StatsCard>
+
+        <button class="mx-4 mt-0 mb-4 sm:my-4 sm:mr-8 px-4 py-2 text-xs rounded-lg bg-strava-orange bg-opacity-50 hover:bg-opacity-100 text-white" @click="isShowingLastActivity = !isShowingLastActivity">
+          {{ isShowingLastActivity ? $t('headings.see_longest_ride') : $t('headings.see_last_ride') }}
+        </button>
+      </div>
+
+      
 
       <div class="absolute bottom-0 right-0 flex flex-col sm:flex-row justify-center sm:justify-between items-end w-full">
         <StatsCard class="order-1 sm:order-2 w-full sm:w-auto sm:pr-8">
@@ -108,6 +116,7 @@ html, body, #__nuxt, #__layout {
       else {
         mapScroll.value.scrollLeft = (mapScroll.value.scrollLeftMax / 2)
       }
+      console.log(mapScroll.value)
     })
 
     window.onresize = (e) => {
