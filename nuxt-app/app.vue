@@ -5,7 +5,7 @@
       <div class="absolute top-0 left-0 w-full h-full z-0" :class="activityMapScrollStyle" ref="mapScroll">
         <div class="relative" :style="activityMapWrapperStyle">
           <img :src="currentActivityMap" :style="activityMapStyle" />
-          <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-30"></div>
+          <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-20"></div>
         </div>
       </div>
 
@@ -104,7 +104,7 @@ html, body, #__nuxt, #__layout {
   }
 
   const isShowingLastActivity = ref(false);
-  const isShowingAthleteStats = ref(true);
+  const isShowingAthleteStats = ref(false);
 
   const viewportWidth = ref(0);
   const viewportHeight = ref(0);
