@@ -2,25 +2,27 @@
   <div class="w-full h-full">
     <div class="relative w-full h-full">
 
-      <div class="absolute top-0 left-0 right-0 bottom-0 z-0 overflow-y-scroll">
+      <div class="absolute top-0 left-0 right-0 bottom-0 z-0 overflow-hidden">
         <ClientOnly>
-        <LMap
-      ref="map"
-      :use-global-leaflet="false"
-      @ready="onMapReady"
-      @vue:updated="onMapReady"
-    >
-    <LPolyline :lat-lngs="currentActivityLatLng" >
+          <LMap
+            ref="map"
+            :use-global-leaflet="false"
+            @ready="onMapReady"
+            v-bind:bounds="currentActivityBounds"
+            class="z-0"
+          >
+            <LPolyline :lat-lngs="currentActivityLatLng" >
 
-    </LPolyline>
-      <LTileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution="&amp;copy; <a href=&quot;https://www.openstreetmap.org/&quot;>OpenStreetMap</a> contributors"
-        layer-type="base"
-        name="OpenStreetMap"
-      />
-    </LMap>
-  </ClientOnly>
+            </LPolyline>
+            <LTileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution="&amp;copy; <a href=&quot;https://www.openstreetmap.org/&quot;>OpenStreetMap</a> contributors"
+              layer-type="base"
+              name="OpenStreetMap"
+            />
+          </LMap>
+        </ClientOnly>
+        <div class="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-20" :style="{ 'z-index': 1000 }"></div>
         <!-- <div class="relative">
           <img :src="currentActivityMap" />
           <div class="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-20"></div>
@@ -28,43 +30,45 @@
       </div>
 
       <div
-        class="absolute top-0 left-0 flex flex-col sm:flex-row justify-center sm:justify-between items-end sm:items-start w-full">
-        <StatsCard class="w-full sm:w-fit">
-          <StravaProfile :profile="data!.profile" />
+        class="absolute top-0 left-0 flex flex-col sm:flex-row justify-center sm:justify-between items-end sm:items-start w-full p-4 space-y-4 sm:space-y-0">
+          <StatsCard class="w-full sm:w-fit">
+            <StravaProfile :profile="data!.profile" />
 
-          <button class="mt-3 text-strava-orange text-sm" @click="isShowingAthleteStats = !isShowingAthleteStats">
-            {{ isShowingAthleteStats ? $t('stats.hide') : $t('stats.show') }}
-          </button>
+            <button class="mt-3 text-strava-orange text-sm" @click="isShowingAthleteStats = !isShowingAthleteStats">
+              {{ isShowingAthleteStats ? $t('stats.hide') : $t('stats.show') }}
+            </button>
 
-          <div class="general-stats overflow-hidden" :class="isShowingAthleteStats ? 'max-h-96' : 'max-h-0'">
-            <GeneralStats class="pt-4 " :title="$t('headings.this_year')" :stat="data!.stats.ytd_ride_totals" />
-            <GeneralStats class="pt-2" :title="$t('headings.all_time')" :stat="data!.stats.all_ride_totals" />
-          </div>
-        </StatsCard>
+            <div class="general-stats overflow-hidden" :class="isShowingAthleteStats ? 'max-h-96' : 'max-h-0'">
+              <GeneralStats class="pt-4 " :title="$t('headings.this_year')" :stat="data!.stats.ytd_ride_totals" />
+              <GeneralStats class="pt-2" :title="$t('headings.all_time')" :stat="data!.stats.all_ride_totals" />
+            </div>
+          </StatsCard>
 
         <button
-          class="mx-4 mt-0 mb-4 sm:my-4 sm:mr-8 px-4 py-2 text-xs rounded-lg bg-strava-orange bg-opacity-50 hover:bg-opacity-100 text-white"
+          class="px-4 py-2 text-xs rounded-lg bg-strava-orange bg-opacity-50 hover:bg-opacity-100 text-white"
           @click="isShowingLastActivity = !isShowingLastActivity">
           {{ isShowingLastActivity ? $t('headings.see_longest_ride') : $t('headings.see_last_ride') }}
         </button>
       </div>
 
       <div
-        class="absolute bottom-0 right-0 flex flex-col sm:flex-row justify-center sm:justify-between items-end w-full">
-        <StatsCard class="order-1 sm:order-2 w-full sm:w-auto sm:pr-8">
-          <div
-            class="w-full sm:w-auto flex flex-row sm:flex-col justify-around sm:justify-start items-center sm:items-start space-x-8 sm:space-x-0 space-y-0 sm:space-y-2">
-            <div>
-              <span class="block text-strava-orange text-lg font-bold">
-                {{ isShowingLastActivity ? $t('headings.last_ride') : $t('headings.longest_ride') }}
-              </span>
-              <RideGeneralStats :activity="currentActivity" />
+        class="absolute bottom-0 right-0 flex flex-col sm:flex-row justify-center sm:justify-end items-end w-full">
+        <div class="px-4 py-8">
+          <StatsCard class="order-1 sm:order-2 w-full sm:w-auto sm:pr-8">
+            <div
+              class="w-full sm:w-auto flex flex-row sm:flex-col justify-around sm:justify-start items-center sm:items-start space-x-8 sm:space-x-0 space-y-0 sm:space-y-2">
+              <div>
+                <span class="block text-strava-orange text-lg font-bold">
+                  {{ isShowingLastActivity ? $t('headings.last_ride') : $t('headings.longest_ride') }}
+                </span>
+                <RideGeneralStats :activity="currentActivity" />
+              </div>
+              <div class="">
+                <RideEffortStats :activity="currentActivity" />
+              </div>
             </div>
-            <div class="">
-              <RideEffortStats :activity="currentActivity" />
-            </div>
-          </div>
-        </StatsCard>
+          </StatsCard>
+        </div>
 
         <!-- <Attribution class="order-2 sm:order-1" /> -->
       </div>
@@ -87,27 +91,22 @@
   import L from 'leaflet'
   import type { Strava } from './types/strava';
 
-  const map = ref(null)
+  const map = ref<{
+    leafletObject: L.Map
+  } | null>(null)
 
   const onMapReady = () => {
-    // @ts-ignore
-    const leafMap: L.Map = map.value!.leafletObject;
+    if (map.value) {
+      const leafMap = map.value!.leafletObject;
 
-    const lats = currentActivity.value.latLngTuples.map((t) => t[0]);
-    const lngs = currentActivity.value.latLngTuples.map((t) => t[1]);
+      leafMap.zoomControl.remove()
 
-    const min: LatLngTuple = [
-      Math.min(...lats),
-      Math.min(...lngs),
-    ];
-    const max: LatLngTuple = [
-      Math.max(...lats),
-      Math.max(...lngs),
-    ];
-    const bounds = [min, max];
+      // Set bounds manually on first time
+      const bounds = currentActivityBounds.value;
 
-    leafMap.setMaxBounds(bounds);
-    leafMap.fitBounds(bounds, { padding: [16, 16] });
+      leafMap.setMaxBounds(bounds);
+      leafMap.fitBounds(bounds, { padding: [16, 16] });
+    }
   }
 
   const { data, error } = await useAsyncData(
@@ -164,9 +163,21 @@
     return currentActivity.value.latLngTuples;
   })
 
-  // const currentActivityBounds = computed<L.LatLngBounds>(() => {
-  //   return L.latLngBounds(currentActivity.value.latLngTuples);
-  // })
+  const currentActivityBounds = computed<LatLngTuple[]>(() => {
+    const lats = currentActivity.value.latLngTuples.map((t) => t[0]);
+    const lngs = currentActivity.value.latLngTuples.map((t) => t[1]);
+
+    const min: LatLngTuple = [
+      Math.min(...lats),
+      Math.min(...lngs),
+    ];
+    const max: LatLngTuple = [
+      Math.max(...lats),
+      Math.max(...lngs),
+    ];
+    const bounds = [min, max];
+    return bounds;
+  })
 </script>
 
 <style lang="pcss">
