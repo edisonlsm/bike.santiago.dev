@@ -9,7 +9,8 @@
         </div>
       </div>
 
-      <div class="absolute top-0 left-0 flex flex-col sm:flex-row justify-center sm:justify-between items-end sm:items-start w-full">
+      <div
+        class="absolute top-0 left-0 flex flex-col sm:flex-row justify-center sm:justify-between items-end sm:items-start w-full">
         <StatsCard class="w-full sm:w-fit">
           <StravaProfile :profile="data.profile" />
 
@@ -23,14 +24,18 @@
           </div>
         </StatsCard>
 
-        <button class="mx-4 mt-0 mb-4 sm:my-4 sm:mr-8 px-4 py-2 text-xs rounded-lg bg-strava-orange bg-opacity-50 hover:bg-opacity-100 text-white" @click="isShowingLastActivity = !isShowingLastActivity">
+        <button
+          class="mx-4 mt-0 mb-4 sm:my-4 sm:mr-8 px-4 py-2 text-xs rounded-lg bg-strava-orange bg-opacity-50 hover:bg-opacity-100 text-white"
+          @click="isShowingLastActivity = !isShowingLastActivity">
           {{ isShowingLastActivity ? $t('headings.see_longest_ride') : $t('headings.see_last_ride') }}
         </button>
       </div>
 
-      <div class="absolute bottom-0 right-0 flex flex-col sm:flex-row justify-center sm:justify-between items-end w-full">
+      <div
+        class="absolute bottom-0 right-0 flex flex-col sm:flex-row justify-center sm:justify-between items-end w-full">
         <StatsCard class="order-1 sm:order-2 w-full sm:w-auto sm:pr-8">
-          <div class="w-full sm:w-auto flex flex-row sm:flex-col justify-around sm:justify-start items-center sm:items-start space-x-8 sm:space-x-0 space-y-0 sm:space-y-2">
+          <div
+            class="w-full sm:w-auto flex flex-row sm:flex-col justify-around sm:justify-start items-center sm:items-start space-x-8 sm:space-x-0 space-y-0 sm:space-y-2">
             <div>
               <span class="block text-strava-orange text-lg font-bold">
                 {{ isShowingLastActivity ? $t('headings.last_ride') : $t('headings.longest_ride') }}
@@ -47,27 +52,29 @@
       </div>
     </div>
 
-    
+
   </div>
 </template>
 
 <style>
-html, body, #__nuxt, #__layout {
-  height: 100%;
-}
+
+  html,
+  body,
+  #__nuxt,
+  #__layout {
+    height: 100%;
+  }
 </style>
 
 <script setup>
-  import { computed } from '@vue/reactivity';
-
-  const { data, pending, error, refresh } = await useAsyncData(
+  const { data } = await useAsyncData(
     'strava info',
     async () => {
       const runtimeConfig = useRuntimeConfig()
 
       // Get token
       const access_token = await getStravaToken(runtimeConfig.stravaClientId, runtimeConfig.stravaClientSecret, runtimeConfig.stravaRefreshToken)
-      
+
       // Get profile
       const { id, firstname, lastname, profile } = await getStravaProfile(access_token)
 
@@ -98,10 +105,6 @@ html, body, #__nuxt, #__layout {
       return strava
     },
   )
-
-  if (error) {
-    console.log(error)
-  }
 
   const isShowingLastActivity = ref(false);
   const isShowingAthleteStats = ref(false);
@@ -179,7 +182,7 @@ html, body, #__nuxt, #__layout {
   const LONGEST_ACTIVITY_ID = '6569620057'
 
   async function getStravaToken(client_id, client_secret, refresh_token) {
-    const { access_token }  = await $fetch('https://www.strava.com/oauth/token', {
+    const { access_token } = await $fetch('https://www.strava.com/oauth/token', {
       method: 'POST',
       params: {
         'client_id': client_id,
@@ -250,6 +253,7 @@ html, body, #__nuxt, #__layout {
   }
 
   async function getMapboxMap(polyline, mapbox_token) {
+    // console.log(decode(polyline, 5));
     // First, unescape polyline backslashes
     const unescaped_polyline = polyline.replace('\\\\', '\\')
 
