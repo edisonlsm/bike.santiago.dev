@@ -3,6 +3,7 @@
     <div class="relative w-full h-full">
 
       <div class="absolute top-0 left-0 right-0 bottom-0 z-0 overflow-y-scroll">
+        <ClientOnly>
         <LMap
       ref="map"
       :use-global-leaflet="false"
@@ -19,6 +20,7 @@
         name="OpenStreetMap"
       />
     </LMap>
+  </ClientOnly>
         <!-- <div class="relative">
           <img :src="currentActivityMap" />
           <div class="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-20"></div>
