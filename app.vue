@@ -48,7 +48,7 @@
       </div>
 
       <div
-        class="absolute bottom-0 right-0 flex flex-col sm:flex-row justify-center sm:justify-end items-end w-full">
+        class="absolute bottom-0 right-0 flex flex-col sm:flex-row justify-center sm:justify-between items-end w-full">
         <div class="px-4 py-8">
           <StatsCard class="order-1 sm:order-2 w-full sm:w-auto sm:pr-8">
             <div
