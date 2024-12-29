@@ -11,7 +11,7 @@
             v-bind:bounds="currentActivityBounds"
             class="z-0"
           >
-            <LPolyline :lat-lngs="currentActivityLatLng" >
+            <LPolyline :lat-lngs="currentActivityLatLng" color="#FC4C02">
 
             </LPolyline>
             <LTileLayer
