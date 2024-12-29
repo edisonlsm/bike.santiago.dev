@@ -2,10 +2,10 @@
   <div class="w-full h-full">
     <div class="relative w-full h-full">
 
-      <div class="absolute top-0 left-0 w-full h-full z-0" :class="activityMapScrollStyle">
-        <div class="relative" :style="activityMapWrapperStyle">
-          <img :src="currentActivityMap" :style="activityMapStyle" />
-          <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-20"></div>
+      <div class="absolute top-0 left-0 right-0 bottom-0 z-0 overflow-y-scroll">
+        <div class="relative">
+          <img :src="currentActivityMap" />
+          <div class="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-20"></div>
         </div>
       </div>
 
@@ -110,30 +110,6 @@
   const isShowingLastActivity = ref(false);
   const isShowingAthleteStats = ref(false);
 
-  const viewportWidth = ref(0);
-  const viewportHeight = ref(0);
-
-  // const mapScroll = ref(0)
-
-  onMounted(() => {
-    // viewportWidth.value = window.innerWidth
-    // viewportHeight.value = window.innerHeight
-
-    // nextTick(() => {
-    //   if (viewportWidth.value > viewportHeight.value) {
-    //     mapScroll.value.scrollTop = (mapScroll.value.scrollTopMax / 2)
-    //   }
-    //   else {
-    //     mapScroll.value.scrollLeft = (mapScroll.value.scrollLeftMax / 2)
-    //   }
-    // })
-
-    // window.onresize = (e) => {
-    //   viewportWidth.value = window.innerWidth
-    //   viewportHeight.value = window.innerHeight
-    // }
-  })
-
   const currentActivity = computed(() => {
     return isShowingLastActivity.value ? data.value!.lastActivity : data.value!.longestActivity
   })
@@ -141,33 +117,6 @@
   const currentActivityMap = computed(() => {
     const activity = isShowingLastActivity.value ? data.value!.lastActivity : data.value!.longestActivity
     return activity.mapImage
-  })
-
-  const activityMapScrollStyle = computed(() => {
-    if (viewportWidth.value > viewportHeight.value) {
-      return ['overflow-x-hidden', 'overflow-y-scroll']
-    }
-    else {
-      return ['overflow-x-scroll', 'overflow-y-hidden']
-    }
-  })
-
-  const activityMapWrapperStyle = computed(() => {
-    if (viewportWidth.value > viewportHeight.value) {
-      return { width: '100%', height: 'auto' }
-    }
-    else {
-      return { width: 'fit-content', height: '100%' }
-    }
-  })
-
-  const activityMapStyle = computed(() => {
-    if (viewportWidth.value > viewportHeight.value) {
-      return { maxWidth: '100%', width: '100%', height: 'auto' }
-    }
-    else {
-      return { maxWidth: 'none', width: 'auto', height: '100%' }
-    }
   })
 </script>
 
