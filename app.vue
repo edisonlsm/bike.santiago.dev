@@ -3,10 +3,26 @@
     <div class="relative w-full h-full">
 
       <div class="absolute top-0 left-0 right-0 bottom-0 z-0 overflow-y-scroll">
-        <div class="relative">
+        <LMap
+      ref="map"
+      :use-global-leaflet="false"
+      @ready="onMapReady"
+      @vue:updated="onMapReady"
+    >
+    <LPolyline :lat-lngs="currentActivityLatLng" >
+
+    </LPolyline>
+      <LTileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution="&amp;copy; <a href=&quot;https://www.openstreetmap.org/&quot;>OpenStreetMap</a> contributors"
+        layer-type="base"
+        name="OpenStreetMap"
+      />
+    </LMap>
+        <!-- <div class="relative">
           <img :src="currentActivityMap" />
           <div class="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-20"></div>
-        </div>
+        </div> -->
       </div>
 
       <div
@@ -48,7 +64,7 @@
           </div>
         </StatsCard>
 
-        <Attribution class="order-2 sm:order-1" />
+        <!-- <Attribution class="order-2 sm:order-1" /> -->
       </div>
     </div>
 
@@ -66,7 +82,31 @@
 </style>
 
 <script setup lang="ts">
+  import L from 'leaflet'
   import type { Strava } from './types/strava';
+
+  const map = ref(null)
+
+  const onMapReady = () => {
+    // @ts-ignore
+    const leafMap: L.Map = map.value!.leafletObject;
+
+    const lats = currentActivity.value.latLngTuples.map((t) => t[0]);
+    const lngs = currentActivity.value.latLngTuples.map((t) => t[1]);
+
+    const min: LatLngTuple = [
+      Math.min(...lats),
+      Math.min(...lngs),
+    ];
+    const max: LatLngTuple = [
+      Math.max(...lats),
+      Math.max(...lngs),
+    ];
+    const bounds = [min, max];
+
+    leafMap.setMaxBounds(bounds);
+    leafMap.fitBounds(bounds, { padding: [16, 16] });
+  }
 
   const { data, error } = await useAsyncData(
     'strava info',
@@ -115,9 +155,16 @@
   })
 
   const currentActivityMap = computed(() => {
-    const activity = isShowingLastActivity.value ? data.value!.lastActivity : data.value!.longestActivity
-    return activity.mapImage
+    return currentActivity.value.mapImage
   })
+
+  const currentActivityLatLng = computed<LatLngTuple[]>(() => {
+    return currentActivity.value.latLngTuples;
+  })
+
+  // const currentActivityBounds = computed<L.LatLngBounds>(() => {
+  //   return L.latLngBounds(currentActivity.value.latLngTuples);
+  // })
 </script>
 
 <style lang="pcss">
@@ -127,7 +174,7 @@
 </style>
 
 <script lang="ts">
-  
+  import { decode, type LatLngTuple } from "@googlemaps/polyline-codec"
 
   const STRAVA_API_URL = 'https://www.strava.com/api/v3'
 
@@ -147,8 +194,6 @@
     return access_token;
   }
 
-  
-
   async function getStravaProfile(accessToken: string) {
     const profile = await $fetch<Strava.Profile>(
       STRAVA_API_URL + '/athlete',
@@ -161,8 +206,6 @@
 
     return profile;
   }
-
-  
 
   async function getStravaStats(accessToken: string) {
     const stats = await $fetch<Strava.AthleteStats>(
@@ -177,8 +220,6 @@
     return stats;
   }
 
-  
-
   async function getStravaLastActivity(accessToken: string, mapboxToken: string) {
     const activities = await $fetch<Strava.Activity[]>(
       STRAVA_API_URL + '/athlete/activities?per_page=1',
@@ -190,7 +231,8 @@
     )
 
     let lastActivity = activities[0];
-    lastActivity.mapImage = await getMapboxMap(lastActivity.map.summary_polyline, mapboxToken)
+    // lastActivity.mapImage = await getMapboxMap(lastActivity.map.summary_polyline, mapboxToken)
+    lastActivity.latLngTuples = getMapCoordinates(lastActivity.map.summary_polyline);
 
     return activities[0]
   }
@@ -205,9 +247,16 @@
       }
     )
 
-    activity.mapImage = await getMapboxMap(activity.map.polyline, mapboxToken)
+    // activity.mapImage = await getMapboxMap(activity.map.polyline, mapboxToken)
+    activity.latLngTuples = getMapCoordinates(activity.map.polyline);
 
     return activity
+  }
+
+  function getMapCoordinates(encodedPolyline: string) {
+    const coordinates = decode(encodedPolyline, 5);
+
+    return coordinates;
   }
 
   async function getMapboxMap(polyline: string, mapboxToken: string) {

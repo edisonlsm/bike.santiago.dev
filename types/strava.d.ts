@@ -1,3 +1,5 @@
+import type { LatLngTuple } from "@googlemaps/polyline-codec"
+
 export namespace Strava {
   export interface TokenResponse {
     access_token: string
@@ -35,7 +37,8 @@ export namespace Strava {
     distance: number,
     total_elevation_gain: number,
     map: StravaActivityMap,
-    mapImage?: string
+    mapImage?: string,
+    latLngTuples: LatLngTuple[],
   }
 }
 

@@ -4,7 +4,8 @@ import svgLoader from "vite-svg-loader"
 export default defineNuxtConfig({
     ssr: true,
 
-    modules: ['@nuxtjs/tailwindcss', "@nuxtjs/i18n"],
+
+    modules: ['@nuxtjs/tailwindcss', "@nuxtjs/i18n", '@nuxtjs/leaflet'],
 
     vite: {
         plugins: [
