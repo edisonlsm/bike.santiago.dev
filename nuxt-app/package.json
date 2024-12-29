@@ -14,6 +14,6 @@
   },
   "dependencies": {
     "@googlemaps/polyline-codec": "^1.0.28",
-    "luxon": "^2.4.0"
+    "luxon": "^3.5.0"
   }
 }
