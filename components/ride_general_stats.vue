@@ -11,14 +11,14 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { DateTime } from 'luxon'
-const props = defineProps({
-    activity: {
-        type: Object,
-        required: true
-    }
-})
+
+import type { Strava } from '../types/strava';
+
+const props = defineProps<{
+  activity: Strava.Activity
+}>()
 
 const activityDateAndTime = computed(() => {
   const dateTime = DateTime.fromISO(props.activity.start_date)

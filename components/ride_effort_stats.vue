@@ -15,23 +15,22 @@
   </div>
 </template>
 
-<script setup>
-const props = defineProps({
-    activity: {
-        type: Object,
-        required: true
-    }
-})
+<script setup lang="ts">
+import type { Strava } from '../types/strava';
+
+const props = defineProps<{
+  activity: Strava.Activity
+}>()
 
 const activityDistance = computed(() => {
   const meters = props.activity.distance
-  const km = (meters / 1000).toFixed(2)
-  const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
+  const km = (meters / 1000)
+  const formatter = new Intl.NumberFormat('pt-BR', { useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 2 })
   return `${formatter.format(km)}`
 })
 const activityClimbMeters = computed (() => {
   const meters = props.activity.total_elevation_gain
-  const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
+  const formatter = new Intl.NumberFormat('pt-BR', { useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 2 })
   return `${formatter.format(meters)}`
 })
 </script>

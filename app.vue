@@ -2,7 +2,7 @@
   <div class="w-full h-full">
     <div class="relative w-full h-full">
 
-      <div class="absolute top-0 left-0 w-full h-full z-0" :class="activityMapScrollStyle" ref="mapScroll">
+      <div class="absolute top-0 left-0 w-full h-full z-0" :class="activityMapScrollStyle">
         <div class="relative" :style="activityMapWrapperStyle">
           <img :src="currentActivityMap" :style="activityMapStyle" />
           <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-20"></div>
@@ -12,15 +12,15 @@
       <div
         class="absolute top-0 left-0 flex flex-col sm:flex-row justify-center sm:justify-between items-end sm:items-start w-full">
         <StatsCard class="w-full sm:w-fit">
-          <StravaProfile :profile="data.profile" />
+          <StravaProfile :profile="data!.profile" />
 
           <button class="mt-3 text-strava-orange text-sm" @click="isShowingAthleteStats = !isShowingAthleteStats">
             {{ isShowingAthleteStats ? $t('stats.hide') : $t('stats.show') }}
           </button>
 
           <div class="general-stats overflow-hidden" :class="isShowingAthleteStats ? 'max-h-96' : 'max-h-0'">
-            <GeneralStats class="pt-4 " :title="$t('headings.this_year')" :stat="data.stats.ytd_ride_totals" />
-            <GeneralStats class="pt-2" :title="$t('headings.all_time')" :stat="data.stats.all_ride_totals" />
+            <GeneralStats class="pt-4 " :title="$t('headings.this_year')" :stat="data!.stats.ytd_ride_totals" />
+            <GeneralStats class="pt-2" :title="$t('headings.all_time')" :stat="data!.stats.all_ride_totals" />
           </div>
         </StatsCard>
 
@@ -57,7 +57,6 @@
 </template>
 
 <style>
-
   html,
   body,
   #__nuxt,
@@ -66,33 +65,35 @@
   }
 </style>
 
-<script setup>
-  const { data } = await useAsyncData(
+<script setup lang="ts">
+  import type { Strava } from './types/strava';
+
+  const { data, error } = await useAsyncData(
     'strava info',
     async () => {
       const runtimeConfig = useRuntimeConfig()
 
       // Get token
-      const access_token = await getStravaToken(runtimeConfig.stravaClientId, runtimeConfig.stravaClientSecret, runtimeConfig.stravaRefreshToken)
+      const accessToken = await getStravaToken(runtimeConfig.stravaClientId, runtimeConfig.stravaClientSecret, runtimeConfig.stravaRefreshToken)
 
       // Get profile
-      const { id, firstname, lastname, profile } = await getStravaProfile(access_token)
+      const { id, firstname, lastname, profile } = await getStravaProfile(accessToken)
 
       // Get stats
-      const { all_ride_totals, ytd_ride_totals } = await getStravaStats(access_token)
+      const { all_ride_totals, ytd_ride_totals } = await getStravaStats(accessToken)
 
       // Get last activity
-      const lastActivity = await getStravaLastActivity(access_token, runtimeConfig.mapBoxAccessToken)
+      const lastActivity = await getStravaLastActivity(accessToken, runtimeConfig.mapBoxAccessToken)
 
       // Get longest activity
-      const longestActivity = await getStravaLongestActivity(access_token, runtimeConfig.mapBoxAccessToken)
+      const longestActivity = await getStravaLongestActivity(accessToken, runtimeConfig.mapBoxAccessToken)
 
       const strava = {
         profile: {
           id: id,
           firstname,
           lastname,
-          picture: profile
+          profile
         },
         stats: {
           all_ride_totals,
@@ -112,33 +113,33 @@
   const viewportWidth = ref(0);
   const viewportHeight = ref(0);
 
-  const mapScroll = ref(null)
+  // const mapScroll = ref(0)
 
   onMounted(() => {
-    viewportWidth.value = window.innerWidth
-    viewportHeight.value = window.innerHeight
+    // viewportWidth.value = window.innerWidth
+    // viewportHeight.value = window.innerHeight
 
-    nextTick(() => {
-      if (viewportWidth.value > viewportHeight.value) {
-        mapScroll.value.scrollTop = (mapScroll.value.scrollTopMax / 2)
-      }
-      else {
-        mapScroll.value.scrollLeft = (mapScroll.value.scrollLeftMax / 2)
-      }
-    })
+    // nextTick(() => {
+    //   if (viewportWidth.value > viewportHeight.value) {
+    //     mapScroll.value.scrollTop = (mapScroll.value.scrollTopMax / 2)
+    //   }
+    //   else {
+    //     mapScroll.value.scrollLeft = (mapScroll.value.scrollLeftMax / 2)
+    //   }
+    // })
 
-    window.onresize = (e) => {
-      viewportWidth.value = window.innerWidth
-      viewportHeight.value = window.innerHeight
-    }
+    // window.onresize = (e) => {
+    //   viewportWidth.value = window.innerWidth
+    //   viewportHeight.value = window.innerHeight
+    // }
   })
 
   const currentActivity = computed(() => {
-    return isShowingLastActivity.value ? data.value.lastActivity : data.value.longestActivity
+    return isShowingLastActivity.value ? data.value!.lastActivity : data.value!.longestActivity
   })
 
   const currentActivityMap = computed(() => {
-    const activity = isShowingLastActivity.value ? data.value.lastActivity : data.value.longestActivity
+    const activity = isShowingLastActivity.value ? data.value!.lastActivity : data.value!.longestActivity
     return activity.mapImage
   })
 
@@ -176,31 +177,35 @@
 }
 </style>
 
-<script>
+<script lang="ts">
+  
+
   const STRAVA_API_URL = 'https://www.strava.com/api/v3'
 
   const LONGEST_ACTIVITY_ID = '6569620057'
 
-  async function getStravaToken(client_id, client_secret, refresh_token) {
-    const { access_token } = await $fetch('https://www.strava.com/oauth/token', {
+  async function getStravaToken(clientId: string, clientSecret: string, refreshToken: string) {
+    const { access_token } = await $fetch<Strava.TokenResponse>('https://www.strava.com/oauth/token', {
       method: 'POST',
       params: {
-        'client_id': client_id,
-        'client_secret': client_secret,
+        'client_id': clientId,
+        'client_secret': clientSecret,
         'grant_type': 'refresh_token',
-        'refresh_token': refresh_token
+        'refresh_token': refreshToken
       }
     })
 
     return access_token;
   }
 
-  async function getStravaProfile(access_token) {
-    const profile = await $fetch(
+  
+
+  async function getStravaProfile(accessToken: string) {
+    const profile = await $fetch<Strava.Profile>(
       STRAVA_API_URL + '/athlete',
       {
         headers: {
-          'Authorization': 'Bearer ' + access_token
+          'Authorization': 'Bearer ' + accessToken
         }
       }
     )
@@ -208,12 +213,14 @@
     return profile;
   }
 
-  async function getStravaStats(access_token) {
-    const stats = await $fetch(
+  
+
+  async function getStravaStats(accessToken: string) {
+    const stats = await $fetch<Strava.AthleteStats>(
       STRAVA_API_URL + '/athletes/23428282/stats',
       {
         headers: {
-          'Authorization': 'Bearer ' + access_token
+          'Authorization': 'Bearer ' + accessToken
         }
       }
     )
@@ -221,38 +228,40 @@
     return stats;
   }
 
-  async function getStravaLastActivity(access_token, mapbox_token) {
-    const activities = await $fetch(
+  
+
+  async function getStravaLastActivity(accessToken: string, mapboxToken: string) {
+    const activities = await $fetch<Strava.Activity[]>(
       STRAVA_API_URL + '/athlete/activities?per_page=1',
       {
         headers: {
-          'Authorization': 'Bearer ' + access_token
+          'Authorization': 'Bearer ' + accessToken
         }
       }
     )
 
     let lastActivity = activities[0];
-    lastActivity.mapImage = await getMapboxMap(lastActivity.map.summary_polyline, mapbox_token)
+    lastActivity.mapImage = await getMapboxMap(lastActivity.map.summary_polyline, mapboxToken)
 
     return activities[0]
   }
 
-  async function getStravaLongestActivity(access_token, mapbox_token) {
-    let activity = await $fetch(
+  async function getStravaLongestActivity(accessToken: String, mapboxToken: string) {
+    let activity = await $fetch<Strava.Activity>(
       STRAVA_API_URL + '/activities/' + LONGEST_ACTIVITY_ID,
       {
         headers: {
-          'Authorization': 'Bearer ' + access_token
+          'Authorization': 'Bearer ' + accessToken
         }
       }
     )
 
-    activity.mapImage = await getMapboxMap(activity.map.polyline, mapbox_token)
+    activity.mapImage = await getMapboxMap(activity.map.polyline, mapboxToken)
 
     return activity
   }
 
-  async function getMapboxMap(polyline, mapbox_token) {
+  async function getMapboxMap(polyline: string, mapboxToken: string) {
     // console.log(decode(polyline, 5));
     // First, unescape polyline backslashes
     const unescaped_polyline = polyline.replace('\\\\', '\\')
@@ -269,11 +278,12 @@
       {
         params: {
           padding: 128,
-          access_token: mapbox_token
+          access_token: mapboxToken
         }
       }
     )
 
+    //@ts-ignore
     const buffer = Buffer.from(await image.arrayBuffer())
     const b64 = buffer.toString('base64')
 

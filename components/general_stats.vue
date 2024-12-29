@@ -21,19 +21,14 @@
   </div>
 </template>
 
-<script setup>
-import { Duration } from 'luxon'
+<script setup lang="ts">
+  import type { Strava } from '../types/strava';
+  import { Duration } from 'luxon'
 
-const props = defineProps({
-  title: {
-    type: String,
-    required: true,
-  },
-  stat: {
-    type: Object,
-    required: true
-  }
-})
+const props = defineProps<{
+  title: string,
+  stat: Strava.Stats
+}>()
 
 const statHours = computed(() => {
   const seconds = props.stat.moving_time
@@ -44,13 +39,13 @@ const statHours = computed(() => {
 })
 const statKms = computed(() => {
   const meters = props.stat.distance
-  const km = Math.floor(meters / 1000)
-  const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
+  const km = meters / 1000
+  const formatter = new Intl.NumberFormat('pt-BR', { useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
   return `${formatter.format(km)}`
 })
 const statClimbedMeters = computed(() => {
   const meters = props.stat.elevation_gain
-  const formatter = new Intl.NumberFormat({ useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
+  const formatter = new Intl.NumberFormat('pt-BR', { useGrouping: true, minimumFractionDigits: 0, maximumFractionDigits: 0 })
   return `${formatter.format(meters)}`
 })
 </script>

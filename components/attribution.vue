@@ -5,6 +5,6 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import PoweredByStravaLogo from '~/assets/powered_by_strava.svg?component'
 </script>

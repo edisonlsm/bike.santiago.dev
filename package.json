@@ -9,6 +9,7 @@
   "devDependencies": {
     "@nuxtjs/i18n": "^9.0.0-rc.2",
     "@nuxtjs/tailwindcss": "^6.12.2",
+    "@types/luxon": "^3.4.2",
     "nuxt": "^3.14.1592",
     "vite-svg-loader": "^5.1.0"
   },
