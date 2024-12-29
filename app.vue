@@ -23,10 +23,6 @@
           </LMap>
         </ClientOnly>
         <div class="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-20" :style="{ 'z-index': 1000 }"></div>
-        <!-- <div class="relative">
-          <img :src="currentActivityMap" />
-          <div class="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-20"></div>
-        </div> -->
       </div>
 
       <div
@@ -70,7 +66,7 @@
           </StatsCard>
         </div>
 
-        <!-- <Attribution class="order-2 sm:order-1" /> -->
+        <Attribution class="order-2 sm:order-1" />
       </div>
     </div>
 
@@ -244,7 +240,6 @@
     )
 
     let lastActivity = activities[0];
-    // lastActivity.mapImage = await getMapboxMap(lastActivity.map.summary_polyline, mapboxToken)
     lastActivity.latLngTuples = getMapCoordinates(lastActivity.map.summary_polyline);
 
     return activities[0]
@@ -260,7 +255,6 @@
       }
     )
 
-    // activity.mapImage = await getMapboxMap(activity.map.polyline, mapboxToken)
     activity.latLngTuples = getMapCoordinates(activity.map.polyline);
 
     return activity
@@ -270,36 +264,5 @@
     const coordinates = decode(encodedPolyline, 5);
 
     return coordinates;
-  }
-
-  async function getMapboxMap(polyline: string, mapboxToken: string) {
-    // console.log(decode(polyline, 5));
-    // First, unescape polyline backslashes
-    const unescaped_polyline = polyline.replace('\\\\', '\\')
-
-    // Now, url encode it
-    const encoded_polyline = encodeURIComponent(unescaped_polyline)
-
-    // Create the path parameter
-    // https://docs.mapbox.com/api/maps/static-images/#path
-    const map_path = 'path-5+FC4C02-1.0' + '(' + encoded_polyline + ')'
-
-    const image = await $fetch(
-      'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/' + map_path + '/auto/1280x1280@2x',
-      {
-        params: {
-          padding: 128,
-          access_token: mapboxToken
-        }
-      }
-    )
-
-    //@ts-ignore
-    const buffer = Buffer.from(await image.arrayBuffer())
-    const b64 = buffer.toString('base64')
-
-    const base64 = 'data:image/png;base64,' + b64
-
-    return base64
   }
 </script>
