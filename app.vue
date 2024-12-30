@@ -144,7 +144,7 @@
     },
   )
 
-  const isShowingLastActivity = ref(false);
+  const isShowingLastActivity = ref(true);
   const isShowingAthleteStats = ref(false);
 
   const currentActivity = computed(() => {
