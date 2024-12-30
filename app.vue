@@ -8,7 +8,7 @@
             ref="map"
             :use-global-leaflet="false"
             @ready="onMapReady"
-            v-bind:bounds="currentActivityBounds"
+            @vue:updated="onMapReady"
             class="z-0"
           >
             <LPolyline :lat-lngs="currentActivityLatLng" color="#FC4C02">
@@ -91,16 +91,14 @@
     leafletObject: L.Map
   } | null>(null)
 
-  const onMapReady = () => {
+  const onMapReady = async () => {
     if (map.value) {
       const leafMap = map.value!.leafletObject;
 
       leafMap.zoomControl.remove()
 
-      // Set bounds manually on first time
       const bounds = currentActivityBounds.value;
 
-      leafMap.setMaxBounds(bounds);
       leafMap.fitBounds(bounds, { padding: [16, 16] });
     }
   }
