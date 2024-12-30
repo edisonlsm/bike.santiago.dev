@@ -30,6 +30,9 @@ export default defineNuxtConfig({
         lazy: true,
         defaultLocale: 'pt-br',
     },
+    build: {
+        transpile: ['@googlemaps/polyline-codec']
+    },
     runtimeConfig: {
         stravaClientId: process.env.STRAVA_CLIENT_ID,
         stravaClientSecret: process.env.STRAVA_CLIENT_SECRET,
