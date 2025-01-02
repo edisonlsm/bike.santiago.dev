@@ -2,10 +2,15 @@ import svgLoader from "vite-svg-loader"
 
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
-    ssr: true,
+    compatibilityDate: '2024-11-01',
+    devtools: { enabled: true },
+
+    nitro: {
+        preset: "cloudflare-pages"
+    },
 
 
-    modules: ['@nuxtjs/tailwindcss', "@nuxtjs/i18n", '@nuxtjs/leaflet'],
+    modules: ["nitro-cloudflare-dev", "@nuxtjs/tailwindcss", "@nuxtjs/i18n", "@nuxtjs/leaflet"],
 
     vite: {
         plugins: [
@@ -36,9 +41,6 @@ export default defineNuxtConfig({
     runtimeConfig: {
         stravaClientId: process.env.STRAVA_CLIENT_ID,
         stravaClientSecret: process.env.STRAVA_CLIENT_SECRET,
-        stravaRefreshToken: process.env.STRAVA_REFRESH_TOKEN,
-        mapBoxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
-    },
-
-    compatibilityDate: "2024-12-29"
+        stravaRefreshToken: process.env.STRAVA_REFRESH_TOKEN
+    }
 })

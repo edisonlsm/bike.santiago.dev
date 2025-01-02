@@ -1,10 +1,29 @@
-.DS_Store
-node_modules
-*.log*
+# Nuxt dev/build outputs
+.output
+.data
 .nuxt
 .nitro
 .cache
-.output
-.env
 dist
+
+# Node dependencies
+node_modules
 package-lock.json
+
+# Logs
+logs
+*.log
+
+# Misc
+.DS_Store
+.fleet
+.idea
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# wrangler files
+.wrangler
+.dev.vars
