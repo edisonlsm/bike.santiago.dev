@@ -86,6 +86,7 @@
 <script setup lang="ts">
   import L from 'leaflet'
   import type { Strava } from './types/strava';
+  import { decode, type LatLngTuple } from "@googlemaps/polyline-codec"
 
   const map = ref<{
     leafletObject: L.Map
@@ -110,36 +111,46 @@
     async () => {
       const response = await requestFetch('/api/strava/auth')
 
-      console.log(`Server auth response: ${JSON.stringify(response)}`)
-
       // Get token
       const access_token = response.access_token;
       // Get profile
-      const { id, firstname, lastname, profile }: Strava.Athlete = await requestFetch('/api/strava/athlete', { query: { access_token }});
+      const athlete: Strava.Athlete = await requestFetch(
+        '/api/strava/athlete',
+        { query: { access_token }}
+      );
 
-      // Get stats
-      const { all_ride_totals, ytd_ride_totals }: Strava.AthleteStats = await requestFetch('/api/strava/athlete_stats', { query: { access_token, athlete_id: id }});
+      // Get stats,
+      const stats: Strava.AthleteStats = await requestFetch(
+        `/api/strava/athletes/${athlete.id}/stats`,
+        { query: { access_token }}
+      );
 
       // Get last activity
-      const lastActivity = await getStravaLastActivity(access_token)
+      const activities: Strava.Activity[] = await requestFetch(
+        `/api/strava/athlete/activities`,
+        { query: { access_token }}
+      )
+      const lastActivity = activities[0]
+      lastActivity.latLngTuples = getMapCoordinates(lastActivity.map.summary_polyline);
 
       // Get longest activity
-      const longestActivity = await getStravaLongestActivity(access_token)
-
-      const server = await $fetch('/api/test');
-
-      console.log(`value returned from server: ${JSON.stringify(server)}`)
-
+      const longestActivityId = useRuntimeConfig().stravaLongestActivityId;
+      const longestActivity: Strava.Activity = await requestFetch(
+        `/api/strava/athlete/activities/${longestActivityId}`,
+        { query: { access_token }}
+      )
+      longestActivity.latLngTuples = getMapCoordinates(longestActivity.map.summary_polyline);
+      
       const strava = {
         profile: {
-          id: id,
-          firstname,
-          lastname,
-          profile
+          id: athlete.id,
+          firstname: athlete.firstname,
+          lastname: athlete.lastname,
+          profile: athlete.profile
         },
         stats: {
-          all_ride_totals,
-          ytd_ride_totals
+          all_ride_totals: stats.all_ride_totals,
+          ytd_ride_totals: stats.ytd_ride_totals
         },
         lastActivity,
         longestActivity
@@ -179,51 +190,6 @@
     const bounds = [min, max];
     return bounds;
   })
-</script>
-
-<style lang="pcss">
-.general-stats {
-  transition: max-height 0.25s linear;
-}
-</style>
-
-<script lang="ts">
-  import { decode, type LatLngTuple } from "@googlemaps/polyline-codec"
-
-  const STRAVA_API_URL = 'https://www.strava.com/api/v3'
-
-  const LONGEST_ACTIVITY_ID = '6569620057'
-
-  async function getStravaLastActivity(accessToken: string) {
-    const activities = await $fetch<Strava.Activity[]>(
-      STRAVA_API_URL + '/athlete/activities?per_page=1',
-      {
-        headers: {
-          'Authorization': 'Bearer ' + accessToken
-        }
-      }
-    )
-
-    let lastActivity = activities[0];
-    lastActivity.latLngTuples = getMapCoordinates(lastActivity.map.summary_polyline);
-
-    return activities[0]
-  }
-
-  async function getStravaLongestActivity(accessToken: String) {
-    let activity = await $fetch<Strava.Activity>(
-      STRAVA_API_URL + '/activities/' + LONGEST_ACTIVITY_ID,
-      {
-        headers: {
-          'Authorization': 'Bearer ' + accessToken
-        }
-      }
-    )
-
-    activity.latLngTuples = getMapCoordinates(activity.map.polyline);
-
-    return activity
-  }
 
   function getMapCoordinates(encodedPolyline: string) {
     const coordinates = decode(encodedPolyline, 5);
@@ -231,3 +197,9 @@
     return coordinates;
   }
 </script>
+
+<style lang="pcss">
+.general-stats {
+  transition: max-height 0.25s linear;
+}
+</style>

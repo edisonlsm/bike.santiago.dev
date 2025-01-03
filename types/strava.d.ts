@@ -28,11 +28,15 @@ export namespace Strava {
     moving_time: number,
     elapsed_time: number,
     elevation_gain: number,
+    achievement_count?: number
   }
 
   export interface AthleteStats {
-    all_ride_totals: StravaStats,
-    ytd_ride_totals: StravaStats
+    biggest_ride_distance: number,
+    biggest_climb_elevation_gain: number,
+    recent_ride_totals: Strava.Stats,
+    all_ride_totals: Strava.Stats,
+    ytd_ride_totals: Strava.Stats
   }
 
   export interface ActivityMap {
@@ -46,7 +50,7 @@ export namespace Strava {
     start_date: string,
     distance: number,
     total_elevation_gain: number,
-    map: StravaActivityMap,
+    map: Strava.ActivityMap,
     mapImage?: string,
     latLngTuples: LatLngTuple[],
   }

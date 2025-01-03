@@ -4,11 +4,14 @@ import { z } from 'zod'
 export default defineEventHandler(async (event) => {
   const query = await getValidatedQuery(event, z.object({
     access_token: z.string(),
-    athlete_id: z.string(),
+    per_page: z.number().default(1)
   }).parse);
 
-  const stats = await $fetch<Strava.AthleteStats>(
-    useRuntimeConfig().stravaApiUrl + `/athletes/${query.athlete_id}/stats`,
+  const uri = new URL(useRuntimeConfig().stravaApiUrl + `/athlete/activities`)
+  uri.searchParams.append('per_page', query.per_page.toString())
+
+  const stats = await $fetch<Strava.Activity[]>(
+    uri.href,
     {
       headers: {
         'Authorization': 'Bearer ' + query.access_token
