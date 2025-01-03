@@ -3,7 +3,8 @@
     <div class="relative w-full h-full">
 
       <div class="absolute top-0 left-0 right-0 bottom-0 z-0 overflow-hidden">
-        <ClientOnly>
+        <ActivityMap :activity="currentActivity" />
+        <!-- <ClientOnly>
           <LMap
             ref="map"
             :use-global-leaflet="false"
@@ -21,24 +22,13 @@
               name="OpenStreetMap"
             />
           </LMap>
-        </ClientOnly>
+        </ClientOnly> -->
         <div class="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-20" :style="{ 'z-index': 1000 }"></div>
       </div>
 
       <div
         class="absolute top-0 left-0 flex flex-col sm:flex-row justify-center sm:justify-between items-end sm:items-start w-full p-4 space-y-4 sm:space-y-0">
-          <StatsCard class="w-full sm:w-fit">
-            <StravaProfile :profile="data!.profile" />
-
-            <button class="mt-3 text-strava-orange text-sm" @click="isShowingAthleteStats = !isShowingAthleteStats">
-              {{ isShowingAthleteStats ? $t('stats.hide') : $t('stats.show') }}
-            </button>
-
-            <div class="general-stats overflow-hidden" :class="isShowingAthleteStats ? 'max-h-96' : 'max-h-0'">
-              <GeneralStats class="pt-4 " :title="$t('headings.this_year')" :stat="data!.stats.ytd_ride_totals" />
-              <GeneralStats class="pt-2" :title="$t('headings.all_time')" :stat="data!.stats.all_ride_totals" />
-            </div>
-          </StatsCard>
+        <AthleteStatsCard :athlete="data!.athlete" :athleteStats="data!.stats" />
 
         <button
           class="px-4 py-2 text-xs rounded-lg bg-strava-orange bg-opacity-50 hover:bg-opacity-100 text-white"
@@ -50,20 +40,7 @@
       <div
         class="absolute bottom-0 right-0 flex flex-col sm:flex-row justify-center sm:justify-between items-end w-full">
         <div class="px-4 py-8 order-1 sm:order-2 ">
-          <StatsCard class="w-full sm:w-auto sm:pr-8">
-            <div
-              class="w-full sm:w-auto flex flex-row sm:flex-col justify-around sm:justify-start items-center sm:items-start space-x-8 sm:space-x-0 space-y-0 sm:space-y-2">
-              <div>
-                <span class="block text-strava-orange text-lg font-bold">
-                  {{ isShowingLastActivity ? $t('headings.last_ride') : $t('headings.longest_ride') }}
-                </span>
-                <RideGeneralStats :activity="currentActivity" />
-              </div>
-              <div class="">
-                <RideEffortStats :activity="currentActivity" />
-              </div>
-            </div>
-          </StatsCard>
+          <RideStats :activity="currentActivity" :isShowingLastActivity="isShowingLastActivity" />
         </div>
 
         <Attribution class="order-2 sm:order-1" />
@@ -140,28 +117,17 @@
         { query: { access_token }}
       )
       longestActivity.latLngTuples = getMapCoordinates(longestActivity.map.summary_polyline);
-      
-      const strava = {
-        profile: {
-          id: athlete.id,
-          firstname: athlete.firstname,
-          lastname: athlete.lastname,
-          profile: athlete.profile
-        },
-        stats: {
-          all_ride_totals: stats.all_ride_totals,
-          ytd_ride_totals: stats.ytd_ride_totals
-        },
-        lastActivity,
-        longestActivity
-      }
 
-      return strava
+      return {
+        athlete,
+        stats,
+        lastActivity,
+        longestActivity,
+      }
     },
   )
 
   const isShowingLastActivity = ref(true);
-  const isShowingAthleteStats = ref(false);
 
   const currentActivity = computed(() => {
     return isShowingLastActivity.value ? data.value!.lastActivity : data.value!.longestActivity
