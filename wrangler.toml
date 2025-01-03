@@ -3,3 +3,8 @@ name = "bike-santiago-dev"
 compatibility_date = "2024-12-24"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "./dist"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "5c6c326e5af443d6850449929809a90c"
+preview_id = "5c6c326e5af443d6850449929809a90c"
