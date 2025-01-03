@@ -106,16 +106,13 @@
   const { data, error } = await useAsyncData(
     'strava info',
     async () => {
-      console.log('useAsyncData')
       const runtimeConfig = useRuntimeConfig()
 
       // Get token
       const accessToken = await getStravaToken(runtimeConfig.stravaClientId, runtimeConfig.stravaClientSecret, runtimeConfig.stravaRefreshToken)
-      console.log('getStravaToken')
 
       // Get profile
       const { id, firstname, lastname, profile } = await getStravaProfile(accessToken)
-      console.log('getStravaProfile')
 
       // Get stats
       const { all_ride_totals, ytd_ride_totals } = await getStravaStats(accessToken)
@@ -191,9 +188,6 @@
   const LONGEST_ACTIVITY_ID = '6569620057'
 
   async function getStravaToken(clientId: string, clientSecret: string, refreshToken: string) {
-    console.log(`running getStravaToken`)
-    console.log(`clientId: ${clientId == null ? 'null' : 'not_null'}`)
-    try {
     const { access_token } = await $fetch<Strava.TokenResponse>('https://www.strava.com/oauth/token', {
       method: 'POST',
       params: {
@@ -203,14 +197,8 @@
         'refresh_token': refreshToken
       }
     })
-    console.log(`got getStravaToken`)
+    
     return access_token;
-  }
-  catch (e) {
-    console.log(e)
-    throw e
-  }
-
   }
 
   async function getStravaProfile(accessToken: string) {
