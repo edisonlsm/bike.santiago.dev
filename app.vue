@@ -41,7 +41,6 @@
 
 <script setup lang="ts">
   import type { Strava } from './types/strava';
-  import { decode } from "@googlemaps/polyline-codec"
 
   const requestFetch = useRequestFetch()
 
@@ -51,32 +50,18 @@
       const response = await requestFetch('/api/strava/auth')
 
       // Get token
-      const access_token = response.access_token;
+      const accessToken = response.access_token;
       // Get profile
       const athlete: Strava.Athlete = await requestFetch(
         '/api/strava/athlete',
-        { query: { access_token }}
+        { query: { access_token: accessToken }}
       );
 
-      // Get stats,
-      const stats: Strava.AthleteStats = await requestFetch(
-        `/api/strava/athletes/${athlete.id}/stats`,
-        { query: { access_token }}
-      );
-
-      // Get last activity
-      const activities: Strava.Activity[] = await requestFetch(
-        `/api/strava/athlete/activities`,
-        { query: { access_token }}
-      )
-      const lastActivity = activities[0]
-
-      // Get longest activity
-      const longestActivityId = useRuntimeConfig().stravaLongestActivityId;
-      const longestActivity: Strava.Activity = await requestFetch(
-        `/api/strava/athlete/activities/${longestActivityId}`,
-        { query: { access_token }}
-      )
+      const [stats, lastActivity, longestActivity] = await Promise.all([
+        fetchStats(athlete.id, accessToken),
+        fetchLastActivity(accessToken),
+        fetchLongestActivity(accessToken)
+      ])
 
       return {
         athlete,
@@ -92,6 +77,33 @@
   const currentActivity = computed(() => {
     return isShowingLastActivity.value ? data.value!.lastActivity : data.value!.longestActivity
   })
+
+  async function fetchStats(athleteId: number, accessToken: string) {
+    const stats: Strava.AthleteStats = await requestFetch(
+        `/api/strava/athletes/${athleteId}/stats`,
+        { query: { access_token: accessToken }}
+      );
+      return stats;
+  }
+
+  async function fetchLastActivity(accessToken: string) {
+    // Get last activity
+    const activities: Strava.Activity[] = await requestFetch(
+      `/api/strava/athlete/activities`,
+      { query: { access_token: accessToken }}
+    )
+    const lastActivity = activities[0]
+    return lastActivity;
+  }
+
+  async function fetchLongestActivity(accessToken: string) {
+    const longestActivityId = useRuntimeConfig().stravaLongestActivityId;
+    const longestActivity: Strava.Activity = await requestFetch(
+      `/api/strava/athlete/activities/${longestActivityId}`,
+      { query: { access_token: accessToken }}
+    )
+    return longestActivity;
+  }
 </script>
 
 <style lang="pcss">
