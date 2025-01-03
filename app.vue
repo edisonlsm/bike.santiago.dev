@@ -70,7 +70,6 @@
         { query: { access_token }}
       )
       const lastActivity = activities[0]
-      lastActivity.latLngTuples = getMapCoordinates(lastActivity.map.summary_polyline);
 
       // Get longest activity
       const longestActivityId = useRuntimeConfig().stravaLongestActivityId;
@@ -78,7 +77,6 @@
         `/api/strava/athlete/activities/${longestActivityId}`,
         { query: { access_token }}
       )
-      longestActivity.latLngTuples = getMapCoordinates(longestActivity.map.summary_polyline);
 
       return {
         athlete,
@@ -94,12 +92,6 @@
   const currentActivity = computed(() => {
     return isShowingLastActivity.value ? data.value!.lastActivity : data.value!.longestActivity
   })
-
-  function getMapCoordinates(encodedPolyline: string) {
-    const coordinates = decode(encodedPolyline, 5);
-
-    return coordinates;
-  }
 </script>
 
 <style lang="pcss">

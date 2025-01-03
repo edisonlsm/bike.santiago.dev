@@ -46,13 +46,13 @@ export namespace Strava {
 
   export interface Activity {
     name: string,
+    distance: number,
+    moving_time: number,
+    elapsed_time: number,
+    total_elevation_gain: number,
     id: number,
     start_date: string,
-    distance: number,
-    total_elevation_gain: number,
     map: Strava.ActivityMap,
-    mapImage?: string,
-    latLngTuples: LatLngTuple[],
   }
 }
 
