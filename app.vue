@@ -123,6 +123,10 @@
       // Get longest activity
       const longestActivity = await getStravaLongestActivity(accessToken)
 
+      const server = await $fetch('/api/test');
+
+      console.log(`value returned from server: ${JSON.stringify(server)}`)
+
       const strava = {
         profile: {
           id: id,
