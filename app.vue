@@ -192,6 +192,8 @@
 
   async function getStravaToken(clientId: string, clientSecret: string, refreshToken: string) {
     console.log(`running getStravaToken`)
+    console.log(`clientId: ${clientId == null ? 'null' : 'not_null'}`)
+    try {
     const { access_token } = await $fetch<Strava.TokenResponse>('https://www.strava.com/oauth/token', {
       method: 'POST',
       params: {
@@ -201,9 +203,14 @@
         'refresh_token': refreshToken
       }
     })
-
     console.log(`got getStravaToken`)
     return access_token;
+  }
+  catch (e) {
+    console.log(e)
+    throw e
+  }
+
   }
 
   async function getStravaProfile(accessToken: string) {
