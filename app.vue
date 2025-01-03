@@ -4,25 +4,6 @@
 
       <div class="absolute top-0 left-0 right-0 bottom-0 z-0 overflow-hidden">
         <ActivityMap :activity="currentActivity" />
-        <!-- <ClientOnly>
-          <LMap
-            ref="map"
-            :use-global-leaflet="false"
-            @ready="onMapReady"
-            @vue:updated="onMapReady"
-            class="z-0"
-          >
-            <LPolyline :lat-lngs="currentActivityLatLng" color="#FC4C02">
-
-            </LPolyline>
-            <LTileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution="&amp;copy; <a href=&quot;https://www.openstreetmap.org/&quot;>OpenStreetMap</a> contributors"
-              layer-type="base"
-              name="OpenStreetMap"
-            />
-          </LMap>
-        </ClientOnly> -->
         <div class="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-20" :style="{ 'z-index': 1000 }"></div>
       </div>
 
@@ -46,8 +27,6 @@
         <Attribution class="order-2 sm:order-1" />
       </div>
     </div>
-
-
   </div>
 </template>
 
@@ -61,25 +40,8 @@
 </style>
 
 <script setup lang="ts">
-  import L from 'leaflet'
   import type { Strava } from './types/strava';
-  import { decode, type LatLngTuple } from "@googlemaps/polyline-codec"
-
-  const map = ref<{
-    leafletObject: L.Map
-  } | null>(null)
-
-  const onMapReady = async () => {
-    if (map.value) {
-      const leafMap = map.value!.leafletObject;
-
-      leafMap.zoomControl.remove()
-
-      const bounds = currentActivityBounds.value;
-
-      leafMap.fitBounds(bounds, { padding: [16, 16] });
-    }
-  }
+  import { decode } from "@googlemaps/polyline-codec"
 
   const requestFetch = useRequestFetch()
 
@@ -131,30 +93,6 @@
 
   const currentActivity = computed(() => {
     return isShowingLastActivity.value ? data.value!.lastActivity : data.value!.longestActivity
-  })
-
-  const currentActivityMap = computed(() => {
-    return currentActivity.value.mapImage
-  })
-
-  const currentActivityLatLng = computed<LatLngTuple[]>(() => {
-    return currentActivity.value.latLngTuples;
-  })
-
-  const currentActivityBounds = computed<LatLngTuple[]>(() => {
-    const lats = currentActivity.value.latLngTuples.map((t) => t[0]);
-    const lngs = currentActivity.value.latLngTuples.map((t) => t[1]);
-
-    const min: LatLngTuple = [
-      Math.min(...lats),
-      Math.min(...lngs),
-    ];
-    const max: LatLngTuple = [
-      Math.max(...lats),
-      Math.max(...lngs),
-    ];
-    const bounds = [min, max];
-    return bounds;
   })
 
   function getMapCoordinates(encodedPolyline: string) {

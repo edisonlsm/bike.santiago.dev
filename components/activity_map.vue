@@ -21,6 +21,7 @@
 </template>
 
 <script setup lang="ts">
+import L from 'leaflet'
 import type { LatLngTuple } from '@googlemaps/polyline-codec';
 import type { Strava } from '../types/strava';
 
