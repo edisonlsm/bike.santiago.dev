@@ -191,6 +191,7 @@
   const LONGEST_ACTIVITY_ID = '6569620057'
 
   async function getStravaToken(clientId: string, clientSecret: string, refreshToken: string) {
+    console.log(`running getStravaToken`)
     const { access_token } = await $fetch<Strava.TokenResponse>('https://www.strava.com/oauth/token', {
       method: 'POST',
       params: {
@@ -201,6 +202,7 @@
       }
     })
 
+    console.log(`got getStravaToken`)
     return access_token;
   }
 
