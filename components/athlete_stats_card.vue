@@ -23,3 +23,9 @@ const props = defineProps<{
 
 const isShowingAthleteStats = ref(false);
 </script>
+
+<style lang="pcss">
+.general-stats {
+  transition: max-height 0.25s linear;
+}
+</style>

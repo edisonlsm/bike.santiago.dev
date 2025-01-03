@@ -105,9 +105,3 @@
     return longestActivity;
   }
 </script>
-
-<style lang="pcss">
-.general-stats {
-  transition: max-height 0.25s linear;
-}
-</style>
