@@ -106,13 +106,16 @@
   const { data, error } = await useAsyncData(
     'strava info',
     async () => {
+      console.log('useAsyncData')
       const runtimeConfig = useRuntimeConfig()
 
       // Get token
       const accessToken = await getStravaToken(runtimeConfig.stravaClientId, runtimeConfig.stravaClientSecret, runtimeConfig.stravaRefreshToken)
+      console.log('getStravaToken')
 
       // Get profile
       const { id, firstname, lastname, profile } = await getStravaProfile(accessToken)
+      console.log('getStravaProfile')
 
       // Get stats
       const { all_ride_totals, ytd_ride_totals } = await getStravaStats(accessToken)
