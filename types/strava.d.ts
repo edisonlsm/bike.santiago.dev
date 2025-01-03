@@ -2,10 +2,14 @@ import type { LatLngTuple } from "@googlemaps/polyline-codec"
 
 export namespace Strava {
   export interface TokenResponse {
-    access_token: string
+    token_type: string,
+    access_token: string,
+    expires_at: number,
+    expires_in: number,
+    refresh_token: string
   }
 
-  export interface Profile {
+  export interface Athlete {
     id: number,
     firstname: string,
     lastname: string,

@@ -103,25 +103,28 @@
     }
   }
 
+  const requestFetch = useRequestFetch()
+
   const { data, error } = await useAsyncData(
     'strava info',
     async () => {
-      const runtimeConfig = useRuntimeConfig()
+      const response = await requestFetch('/api/strava/auth')
+
+      console.log(`Server auth response: ${JSON.stringify(response)}`)
 
       // Get token
-      const accessToken = await getStravaToken(runtimeConfig.stravaClientId, runtimeConfig.stravaClientSecret, runtimeConfig.stravaRefreshToken)
-
+      const access_token = response.access_token;
       // Get profile
-      const { id, firstname, lastname, profile } = await getStravaProfile(accessToken)
+      const { id, firstname, lastname, profile } = await requestFetch('/api/strava/athlete', { query: { access_token }});
 
       // Get stats
-      const { all_ride_totals, ytd_ride_totals } = await getStravaStats(accessToken)
+      const { all_ride_totals, ytd_ride_totals } = await getStravaStats(access_token)
 
       // Get last activity
-      const lastActivity = await getStravaLastActivity(accessToken)
+      const lastActivity = await getStravaLastActivity(access_token)
 
       // Get longest activity
-      const longestActivity = await getStravaLongestActivity(accessToken)
+      const longestActivity = await getStravaLongestActivity(access_token)
 
       const server = await $fetch('/api/test');
 
@@ -191,22 +194,8 @@
 
   const LONGEST_ACTIVITY_ID = '6569620057'
 
-  async function getStravaToken(clientId: string, clientSecret: string, refreshToken: string) {
-    const { access_token } = await $fetch<Strava.TokenResponse>('https://www.strava.com/oauth/token', {
-      method: 'POST',
-      params: {
-        'client_id': clientId,
-        'client_secret': clientSecret,
-        'grant_type': 'refresh_token',
-        'refresh_token': refreshToken
-      }
-    })
-    
-    return access_token;
-  }
-
   async function getStravaProfile(accessToken: string) {
-    const profile = await $fetch<Strava.Profile>(
+    const profile = await $fetch<Strava.Athlete>(
       STRAVA_API_URL + '/athlete',
       {
         headers: {

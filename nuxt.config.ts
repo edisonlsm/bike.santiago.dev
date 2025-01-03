@@ -34,6 +34,8 @@ export default defineNuxtConfig({
         transpile: ['@googlemaps/polyline-codec']
     },
     runtimeConfig: {
+        stravaApiUrl: process.env.STRAVA_API_URL,
+        stravaLongestActivityId: process.env.STRAVA_LONGEST_ACTIVITY_ID,
         stravaClientId: process.env.STRAVA_CLIENT_ID,
         stravaClientSecret: process.env.STRAVA_CLIENT_SECRET,
         stravaRefreshToken: process.env.STRAVA_REFRESH_TOKEN
