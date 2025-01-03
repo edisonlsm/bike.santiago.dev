@@ -11,8 +11,14 @@ export namespace Strava {
 
   export interface Athlete {
     id: number,
+    username: string,
     firstname: string,
     lastname: string,
+    bio?: string,
+    city: string,
+    state: string,
+    country: string,
+    profile_medium: string,
     profile: string
   }
 

@@ -4,10 +4,11 @@ import { z } from 'zod'
 export default defineEventHandler(async (event) => {
   const query = await getValidatedQuery(event, z.object({
     access_token: z.string(),
+    athlete_id: z.string(),
   }).parse);
 
-  const profile = await $fetch<Strava.Athlete>(
-    useRuntimeConfig().stravaApiUrl + '/athlete',
+  const stats = await $fetch<Strava.AthleteStats>(
+    useRuntimeConfig().stravaApiUrl + `/athletes/${query.athlete_id}/stats`,
     {
       headers: {
         'Authorization': 'Bearer ' + query.access_token
@@ -15,5 +16,5 @@ export default defineEventHandler(async (event) => {
     }
   )
 
-  return profile;
+  return stats;
 })

@@ -115,10 +115,10 @@
       // Get token
       const access_token = response.access_token;
       // Get profile
-      const { id, firstname, lastname, profile } = await requestFetch('/api/strava/athlete', { query: { access_token }});
+      const { id, firstname, lastname, profile }: Strava.Athlete = await requestFetch('/api/strava/athlete', { query: { access_token }});
 
       // Get stats
-      const { all_ride_totals, ytd_ride_totals } = await getStravaStats(access_token)
+      const { all_ride_totals, ytd_ride_totals }: Strava.AthleteStats = await requestFetch('/api/strava/athlete_stats', { query: { access_token, athlete_id: id }});
 
       // Get last activity
       const lastActivity = await getStravaLastActivity(access_token)
@@ -193,32 +193,6 @@
   const STRAVA_API_URL = 'https://www.strava.com/api/v3'
 
   const LONGEST_ACTIVITY_ID = '6569620057'
-
-  async function getStravaProfile(accessToken: string) {
-    const profile = await $fetch<Strava.Athlete>(
-      STRAVA_API_URL + '/athlete',
-      {
-        headers: {
-          'Authorization': 'Bearer ' + accessToken
-        }
-      }
-    )
-
-    return profile;
-  }
-
-  async function getStravaStats(accessToken: string) {
-    const stats = await $fetch<Strava.AthleteStats>(
-      STRAVA_API_URL + '/athletes/23428282/stats',
-      {
-        headers: {
-          'Authorization': 'Bearer ' + accessToken
-        }
-      }
-    )
-
-    return stats;
-  }
 
   async function getStravaLastActivity(accessToken: string) {
     const activities = await $fetch<Strava.Activity[]>(
