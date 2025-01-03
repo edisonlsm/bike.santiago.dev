@@ -118,10 +118,10 @@
       const { all_ride_totals, ytd_ride_totals } = await getStravaStats(accessToken)
 
       // Get last activity
-      const lastActivity = await getStravaLastActivity(accessToken, runtimeConfig.mapBoxAccessToken)
+      const lastActivity = await getStravaLastActivity(accessToken)
 
       // Get longest activity
-      const longestActivity = await getStravaLongestActivity(accessToken, runtimeConfig.mapBoxAccessToken)
+      const longestActivity = await getStravaLongestActivity(accessToken)
 
       const strava = {
         profile: {
@@ -227,7 +227,7 @@
     return stats;
   }
 
-  async function getStravaLastActivity(accessToken: string, mapboxToken: string) {
+  async function getStravaLastActivity(accessToken: string) {
     const activities = await $fetch<Strava.Activity[]>(
       STRAVA_API_URL + '/athlete/activities?per_page=1',
       {
@@ -243,7 +243,7 @@
     return activities[0]
   }
 
-  async function getStravaLongestActivity(accessToken: String, mapboxToken: string) {
+  async function getStravaLongestActivity(accessToken: String) {
     let activity = await $fetch<Strava.Activity>(
       STRAVA_API_URL + '/activities/' + LONGEST_ACTIVITY_ID,
       {
