@@ -53,6 +53,19 @@ export namespace Strava {
     id: number,
     start_date: string,
     map: Strava.ActivityMap,
+    photos: Strava.ActivityPhotos<'1024'>[]
+  }
+
+  export type ActivityPhotosURL<Size extends string> = {
+    [S in Size]: string
+  }
+
+  export interface ActivityPhotos<Size extends string> {
+    unique_id: string,
+    caption: string,
+    created_at: string,
+    urls: ActivityPhotosURL<Size>,
+    location: [number, number, number?],
   }
 }
 
