@@ -59,8 +59,10 @@ function setMapBoundsWithinCoordinates(coordinates: LatLngTuple[]) {
     const bounds = getBoundsForCoordinates(coordinates);
     leafMap.fitBounds(bounds, { padding: [16, 16] });
 
+    // Lock the map for the current view where all the bounds fits
     setTimeout(() => {
       leafMap.setMaxBounds(leafMap.getBounds().pad(0.2))
+      leafMap.setMaxZoom(leafMap.getZoom())
     }, 1000)
   }
 }
