@@ -13,7 +13,7 @@
         <LPopup>
           <div class="w-full sm:w-64">
             <img :src="photo.urls[1024]" />
-            <span v-if="photo.caption != ''" class="text-xl text-black text-center font-bold break-words">{{ photo.caption }}</span>
+            <span v-if="photo.caption != ''" class="text-lg text-black text-center font-bold break-words">{{ photo.caption }}</span>
           </div>
         </LPopup>
       </LMarker>
@@ -57,7 +57,7 @@ function setMapBoundsWithinCoordinates(coordinates: LatLngTuple[]) {
     const leafMap = map.value!.leafletObject;
     leafMap.zoomControl.remove()
     const bounds = getBoundsForCoordinates(coordinates);
-    leafMap.fitBounds(bounds, { padding: [16, 16] });
+    leafMap.fitBounds(bounds, { padding: [64, 64] });
 
     // Lock the map for the current view where all the bounds fits
     setTimeout(() => {
