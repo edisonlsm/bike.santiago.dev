@@ -11,9 +11,9 @@
       <LMarker v-for="photo in activity.photos" :key="photo.unique_id" :lat-lng="photo.location">
         <LIcon class-name="image-icon" :icon-url="photo.urls[1024]" :icon-size="[48, 48]" />
         <LPopup>
-          <div class="w-64">
-            <img class="w-64" :src="photo.urls[1024]" />
-            <span v-if="photo.caption != ''" class="text-2xl text-black font-bold break-words">{{ photo.caption }}</span>
+          <div class="w-full sm:w-64">
+            <img :src="photo.urls[1024]" />
+            <span v-if="photo.caption != ''" class="text-xl text-black text-center font-bold break-words">{{ photo.caption }}</span>
           </div>
         </LPopup>
       </LMarker>
