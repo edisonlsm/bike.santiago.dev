@@ -12,7 +12,7 @@
         <LIcon class-name="image-icon" :icon-url="photo.urls[1024]" :icon-size="[48, 48]" />
         <LPopup>
           <div class="w-full min-w-64 sm:w-64">
-            <img :src="photo.urls[1024]" />
+            <img class="rounded-xl" :src="photo.urls[1024]" />
             <span v-if="photo.caption != ''" class="text-lg text-black text-center font-bold break-words">{{ photo.caption }}</span>
           </div>
         </LPopup>
@@ -90,6 +90,6 @@ function getBoundsForCoordinates(coordinates: LatLngTuple[]) {
 
 <style lang="postcss">
 .image-icon {
-  @apply border-white border-4 opacity-70 hover:opacity-100
+  @apply border-white border-4 rounded-2xl opacity-70 hover:opacity-100
 }
 </style>
