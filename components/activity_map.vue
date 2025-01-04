@@ -6,9 +6,18 @@
       @ready="onMapReady"
       class="z-0"
     >
-      <LPolyline :lat-lngs="coordinates" color="#FC4C02">
+      <LPolyline :lat-lngs="coordinates" color="#FC4C02" />
 
-      </LPolyline>
+      <LMarker v-for="photo in activity.photos" :key="photo.unique_id" :lat-lng="photo.location">
+        <LIcon class-name="image-icon" :icon-url="photo.urls[1024]" :icon-size="[48, 48]" />
+        <LPopup>
+          <div class="w-64">
+            <img class="w-64" :src="photo.urls[1024]" />
+            <span v-if="photo.caption != ''" class="text-2xl text-black font-bold break-words">{{ photo.caption }}</span>
+          </div>
+        </LPopup>
+      </LMarker>
+
       <LTileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution="&amp;copy; <a href=&quot;https://www.openstreetmap.org/&quot;>OpenStreetMap</a> contributors"
@@ -49,6 +58,10 @@ function setMapBoundsWithinCoordinates(coordinates: LatLngTuple[]) {
     leafMap.zoomControl.remove()
     const bounds = getBoundsForCoordinates(coordinates);
     leafMap.fitBounds(bounds, { padding: [16, 16] });
+
+    setTimeout(() => {
+      leafMap.setMaxBounds(leafMap.getBounds().pad(0.2))
+    }, 1000)
   }
 }
 
@@ -72,3 +85,9 @@ function getBoundsForCoordinates(coordinates: LatLngTuple[]) {
   return bounds;
 }
 </script>
+
+<style lang="postcss">
+.image-icon {
+  @apply border-white border-4 opacity-70 hover:opacity-100
+}
+</style>
