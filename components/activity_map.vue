@@ -90,6 +90,6 @@ function getBoundsForCoordinates(coordinates: LatLngTuple[]) {
 
 <style lang="postcss">
 .image-icon {
-  @apply border-white border-4 rounded-2xl opacity-70 hover:opacity-100
+  @apply border-white border-4 rounded-xl opacity-70 hover:opacity-100
 }
 </style>
