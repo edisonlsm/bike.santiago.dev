@@ -4,7 +4,7 @@
 
       <div class="absolute top-0 left-0 right-0 bottom-0 z-0 overflow-hidden">
         <ActivityMap :activity="currentActivity" />
-        <div class="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-20 pointer-events-none" :style="{ 'z-index': 1000 }"></div>
+        <div class="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-15 pointer-events-none" :style="{ 'z-index': 1000 }"></div>
       </div>
 
       <div
