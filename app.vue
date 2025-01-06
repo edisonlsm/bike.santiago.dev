@@ -37,6 +37,10 @@
   #__layout {
     height: 100%;
   }
+
+  html {
+    overscroll-behavior: none;
+  }
 </style>
 
 <script setup lang="ts">
