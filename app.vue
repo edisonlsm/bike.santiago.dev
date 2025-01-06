@@ -8,7 +8,7 @@
       </div>
 
       <div
-        class="absolute top-0 left-0 flex flex-col sm:flex-row justify-center sm:justify-between items-end sm:items-start w-full p-4 space-y-4 sm:space-y-0 pointer-events-none">
+        class="absolute top-0 left-0 flex flex-col sm:flex-row justify-center sm:justify-between items-end sm:items-start w-full p-safe-offset-4 space-y-4 sm:space-y-0 pointer-events-none">
         <AthleteStatsCard :athlete="data!.athlete" :athleteStats="data!.stats" class="pointer-events-auto" />
 
         <button
@@ -20,7 +20,7 @@
 
       <div
         class="absolute bottom-0 right-0 flex flex-col sm:flex-row justify-center sm:justify-between items-end w-full pointer-events-none">
-        <div class="px-4 pb-4 sm:pb-8 order-1 sm:order-2 pointer-events-auto">
+        <div class="px-safe-offset-4 pb-4 sm:pb-8 order-1 sm:order-2 pointer-events-auto">
           <RideStats :activity="currentActivity" :isShowingLastActivity="isShowingLastActivity" />
         </div>
 

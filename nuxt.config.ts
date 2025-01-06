@@ -5,6 +5,15 @@ export default defineNuxtConfig({
     compatibilityDate: '2024-11-01',
     devtools: { enabled: true },
 
+    app: {
+        head: {
+            title: 'Santiago Bike Stats',
+            meta: [
+                { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' }
+            ]
+        }
+    },
+
     modules: ["nitro-cloudflare-dev", "@nuxtjs/tailwindcss", "@nuxtjs/i18n", "@nuxtjs/leaflet"],
 
     vite: {
