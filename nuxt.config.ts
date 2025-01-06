@@ -9,6 +9,7 @@ export default defineNuxtConfig({
         head: {
             title: 'Santiago Bike Stats',
             meta: [
+                { name: 'theme-color', content: '#fc4c02' },
                 { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' }
             ]
         }
