@@ -65,18 +65,20 @@
       const [stats, lastActivity] = await Promise.all([
         fetchStats(athlete.id, accessToken),
         fetchLastActivity(accessToken),
-        // fetchLongestActivity(accessToken),
       ])
 
-      console.log(`Stats Response: ${stats}`)
-      console.log(`LastActivity Response: ${lastActivity}`)
-      // console.log(`LongestActivity Response: ${longestActivity}`)
+      console.log(`Stats Response: ${JSON.stringify(stats)}`)
+      console.log(`LastActivity Response: ${JSON.stringify(lastActivity)}`)
+
+
+      const longestActivity = await fetchLongestActivity(accessToken);
+      console.log(`LongestActivity Response: ${JSON.stringify(longestActivity)}`)
 
       return {
         athlete,
         stats,
         lastActivity,
-        // longestActivity,
+        longestActivity,
       }
     },
   )
@@ -111,6 +113,7 @@
 
   async function fetchLongestActivity(accessToken: string) {
     const longestActivityId = useRuntimeConfig().stravaLongestActivityId;
+    console.log(`longestActivityId: ${longestActivityId}`)
     const longestActivity: Strava.Activity = await requestFetch(
       `/api/strava/activities/${longestActivityId}`,
       { query: { access_token: accessToken }}

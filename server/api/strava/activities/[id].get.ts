@@ -10,14 +10,23 @@ export default defineEventHandler(async (event) => {
     id: z.string()
   }).parse);
 
-  const stats = await $fetch<Strava.Activity>(
-    useRuntimeConfig().stravaApiUrl + `/activities/${params.id}`,
-    {
-      headers: {
-        'Authorization': 'Bearer ' + query.access_token
-      }
-    }
-  )
+  console.log(`longestActivityId: ${params.id}`)
 
-  return stats;
+  try {
+    const stats = await $fetch<Strava.Activity>(
+      useRuntimeConfig().stravaApiUrl + `/activities/${params.id}`,
+      {
+        headers: {
+          'Authorization': 'Bearer ' + query.access_token
+        }
+      }
+    )
+
+
+    return stats;
+  }
+  catch (e) {
+    console.log(e);
+    throw e
+  }
 })
