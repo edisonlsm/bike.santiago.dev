@@ -88,8 +88,8 @@
       );
 
     const stats: Strava.AthleteStats = await requestFetch(
-        `/api/strava/athletes/${athlete.id}/stats`,
-        { query: { access_token: accessToken }}
+        '/api/strava/athlete_stats',
+        { query: { access_token: accessToken, athleteId: athlete.id }}
       );
       return stats;
   }
