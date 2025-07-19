@@ -61,6 +61,7 @@
       );
 
       console.log(`Auth Response: ${JSON.stringify(response)}`)
+      console.log(`Athlete Response: ${JSON.stringify(athlete)}`)
 
       // const [stats, lastActivity] = await Promise.all([
       //   fetchStats(athlete.id, accessToken),
@@ -70,15 +71,20 @@
       // console.log(`Stats Response: ${JSON.stringify(stats)}`)
       // console.log(`LastActivity Response: ${JSON.stringify(lastActivity)}`)
 
+      try {
+        const longestActivity = await fetchLongestActivity(accessToken);
+        console.log(`LongestActivity Response: ${JSON.stringify(longestActivity)}`)
 
-      const longestActivity = await fetchLongestActivity(accessToken);
-      console.log(`LongestActivity Response: ${JSON.stringify(longestActivity)}`)
-
-      return {
-        athlete,
-        // stats,
-        // lastActivity,
-        longestActivity,
+        return {
+          athlete,
+          // stats,
+          // lastActivity,
+          longestActivity,
+        }
+      }
+      catch (e) {
+        console.log(`Error on fetchLongestActivity`)
+        console.log(e)
       }
     },
   )
