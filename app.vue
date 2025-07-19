@@ -9,7 +9,7 @@
 
       <div
         class="absolute top-0 left-0 flex flex-col sm:flex-row justify-center sm:justify-between items-end sm:items-start w-full p-safe-offset-4 space-y-4 sm:space-y-0 pointer-events-none">
-        <AthleteStatsCard :athlete="data!.athlete" :athleteStats="data!.stats" class="pointer-events-auto" />
+        <!-- <AthleteStatsCard :athlete="data!.athlete" :athleteStats="data!.stats" class="pointer-events-auto" /> -->
 
         <button
           class="px-4 py-2 text-xs rounded-lg bg-strava-orange bg-opacity-50 hover:bg-opacity-100 text-white pointer-events-auto"
@@ -62,13 +62,13 @@
 
       console.log(`Auth Response: ${JSON.stringify(response)}`)
 
-      const [stats, lastActivity] = await Promise.all([
-        fetchStats(athlete.id, accessToken),
-        fetchLastActivity(accessToken),
-      ])
+      // const [stats, lastActivity] = await Promise.all([
+      //   fetchStats(athlete.id, accessToken),
+      //   fetchLastActivity(accessToken),
+      // ])
 
-      console.log(`Stats Response: ${JSON.stringify(stats)}`)
-      console.log(`LastActivity Response: ${JSON.stringify(lastActivity)}`)
+      // console.log(`Stats Response: ${JSON.stringify(stats)}`)
+      // console.log(`LastActivity Response: ${JSON.stringify(lastActivity)}`)
 
 
       const longestActivity = await fetchLongestActivity(accessToken);
@@ -76,8 +76,8 @@
 
       return {
         athlete,
-        stats,
-        lastActivity,
+        // stats,
+        // lastActivity,
         longestActivity,
       }
     },
@@ -86,7 +86,7 @@
   const isShowingLastActivity = ref(true);
 
   const currentActivity = computed(() => {
-    return data.value!.lastActivity;
+    return data.value!.longestActivity;
     // return isShowingLastActivity.value ? data.value!.lastActivity : data.value!.longestActivity
   })
 
