@@ -62,29 +62,30 @@
 
       console.log(`Auth Response: ${JSON.stringify(response)}`)
 
-      const [stats, lastActivity, longestActivity] = await Promise.all([
+      const [stats, lastActivity] = await Promise.all([
         fetchStats(athlete.id, accessToken),
         fetchLastActivity(accessToken),
-        fetchLongestActivity(accessToken),
+        // fetchLongestActivity(accessToken),
       ])
 
       console.log(`Stats Response: ${stats}`)
       console.log(`LastActivity Response: ${lastActivity}`)
-      console.log(`LongestActivity Response: ${longestActivity}`)
+      // console.log(`LongestActivity Response: ${longestActivity}`)
 
       return {
         athlete,
         stats,
         lastActivity,
-        longestActivity,
+        // longestActivity,
       }
     },
   )
 
-  const isShowingLastActivity = ref(false);
+  const isShowingLastActivity = ref(true);
 
   const currentActivity = computed(() => {
-    return isShowingLastActivity.value ? data.value!.lastActivity : data.value!.longestActivity
+    return data.value!.lastActivity;
+    // return isShowingLastActivity.value ? data.value!.lastActivity : data.value!.longestActivity
   })
 
   async function fetchStats(athleteId: number, accessToken: string) {
