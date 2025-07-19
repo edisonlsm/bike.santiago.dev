@@ -21,5 +21,5 @@ export default defineEventHandler(async (event) => {
 
   const rides = stats.filter((s) => s.type === 'Ride')
 
-  return rides;
+  return rides[0];
 })

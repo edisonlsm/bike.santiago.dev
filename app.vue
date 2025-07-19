@@ -61,7 +61,7 @@
       );
 
       const [stats, lastActivity, longestActivity] = await Promise.all([
-        fetchStats(athlete.id, accessToken),
+        fetchAthleteStats(accessToken),
         fetchLastActivity(accessToken),
         fetchLongestActivity(accessToken),
       ])
@@ -81,9 +81,14 @@
     return isShowingLastActivity.value ? data.value!.lastActivity : data.value!.longestActivity
   })
 
-  async function fetchStats(athleteId: number, accessToken: string) {
+  async function fetchAthleteStats(accessToken: string) {
+    const athlete: Strava.Athlete = await requestFetch(
+        '/api/strava/athlete',
+        { query: { access_token: accessToken }}
+      );
+
     const stats: Strava.AthleteStats = await requestFetch(
-        `/api/strava/athletes/${athleteId}/stats`,
+        `/api/strava/athletes/${athlete.id}/stats`,
         { query: { access_token: accessToken }}
       );
       return stats;
@@ -91,11 +96,11 @@
 
   async function fetchLastActivity(accessToken: string) {
     // Get last activity
-    const activities: Strava.Activity[] = await requestFetch(
-      `/api/strava/athlete/rides`,
+    const activities: Strava.Activity = await requestFetch(
+      `/api/strava/last_ride`,
       { query: { access_token: accessToken }}
     )
-    const lastActivity = activities[0]
+    const lastActivity = activities
 
     const photos = await fetchActivityPhotos(lastActivity, accessToken);
     lastActivity.photos = photos;
@@ -103,9 +108,8 @@
   }
 
   async function fetchLongestActivity(accessToken: string) {
-    const longestActivityId = useRuntimeConfig().stravaLongestActivityId;
     const longestActivity: Strava.Activity = await requestFetch(
-      `/api/strava/activities/${longestActivityId}`,
+      `/api/strava/longest_ride`,
       { query: { access_token: accessToken }}
     )
 
@@ -116,8 +120,9 @@
 
   async function fetchActivityPhotos(activity: Strava.Activity, accessToken: string) {
     const photos: Strava.ActivityPhotos<'1024'>[] = await requestFetch(
-      `/api/strava/activities/${activity.id}/photos`,
-      { query: { access_token: accessToken, size: '1024' } }
+      // `/api/strava/activities/${activity.id}/photos`,
+      `/api/strava/activity_photos`,
+      { query: { access_token: accessToken, size: '1024', activityId: activity.id } }
     )
     return photos;
   }
