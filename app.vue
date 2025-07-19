@@ -60,7 +60,7 @@
         { query: { access_token: accessToken }}
       );
 
-      console.log(`Auth Response: ${response}`)
+      console.log(`Auth Response: ${JSON.stringify(response)}`)
 
       const [stats, lastActivity, longestActivity] = await Promise.all([
         fetchStats(athlete.id, accessToken),

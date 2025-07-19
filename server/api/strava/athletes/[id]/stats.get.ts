@@ -10,14 +10,20 @@ export default defineEventHandler(async (event) => {
     id: z.string()
   }).parse);
 
-  const stats = await $fetch<Strava.AthleteStats>(
-    useRuntimeConfig().stravaApiUrl + `/athletes/${params.id}/stats`,
-    {
-      headers: {
-        'Authorization': 'Bearer ' + query.access_token
+  try {
+    const stats = await $fetch<Strava.AthleteStats>(
+      useRuntimeConfig().stravaApiUrl + `/athletes/${params.id}/stats`,
+      {
+        headers: {
+          'Authorization': 'Bearer ' + query.access_token
+        }
       }
-    }
-  )
+    )
+    return stats;
+  }
+  catch (e) {
+    console.log(e)
+    throw e
+  }
 
-  return stats;
 })
