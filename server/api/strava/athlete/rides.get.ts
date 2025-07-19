@@ -4,7 +4,7 @@ import { z } from 'zod'
 export default defineEventHandler(async (event) => {
   const query = await getValidatedQuery(event, z.object({
     access_token: z.string(),
-    per_page: z.number().default(1)
+    per_page: z.number().default(10)
   }).parse);
 
   const uri = new URL(useRuntimeConfig().stravaApiUrl + `/athlete/activities`)
@@ -19,5 +19,7 @@ export default defineEventHandler(async (event) => {
     }
   )
 
-  return stats;
+  const rides = stats.filter((s) => s.type === 'Ride')
+
+  return rides;
 })

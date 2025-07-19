@@ -62,7 +62,6 @@ function setMapBoundsWithinCoordinates(coordinates: LatLngTuple[]) {
     // Lock the map for the current view where all the bounds fits
     setTimeout(() => {
       leafMap.setMaxBounds(leafMap.getBounds().pad(0.2))
-      leafMap.setMinZoom(leafMap.getZoom())
     }, 1000)
   }
 }

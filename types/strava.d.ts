@@ -50,6 +50,8 @@ export namespace Strava {
     moving_time: number,
     elapsed_time: number,
     total_elevation_gain: number,
+    type: string,
+    sport_type: string,
     id: number,
     start_date: string,
     map: Strava.ActivityMap,

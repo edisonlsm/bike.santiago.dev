@@ -52,7 +52,6 @@
     'strava info',
     async () => {
       const response = await requestFetch('/api/strava/auth')
-
       // Get token
       const accessToken = response.access_token;
       // Get profile
@@ -76,7 +75,7 @@
     },
   )
 
-  const isShowingLastActivity = ref(true);
+  const isShowingLastActivity = ref(false);
 
   const currentActivity = computed(() => {
     return isShowingLastActivity.value ? data.value!.lastActivity : data.value!.longestActivity
@@ -93,7 +92,7 @@
   async function fetchLastActivity(accessToken: string) {
     // Get last activity
     const activities: Strava.Activity[] = await requestFetch(
-      `/api/strava/athlete/activities`,
+      `/api/strava/athlete/rides`,
       { query: { access_token: accessToken }}
     )
     const lastActivity = activities[0]
