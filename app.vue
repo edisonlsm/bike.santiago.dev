@@ -118,10 +118,9 @@
   }
 
   async function fetchLongestActivity(accessToken: string) {
-    const longestActivityId = useRuntimeConfig().stravaLongestActivityId;
-    console.log(`longestActivityId: ${longestActivityId}`)
+    console.log(`fetchLongestActivity`)
     const longestActivity: Strava.Activity = await requestFetch(
-      `/api/strava/activities/${longestActivityId}`,
+      `/api/strava/activities/longest`,
       { query: { access_token: accessToken }}
     )
 

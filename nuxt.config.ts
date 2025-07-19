@@ -15,6 +15,10 @@ export default defineNuxtConfig({
         }
     },
 
+    nitro: {
+        preset: 'cloudflare-pages-static'
+    },
+
     modules: ["nitro-cloudflare-dev", "@nuxtjs/tailwindcss", "@nuxtjs/i18n", "@nuxtjs/leaflet"],
 
     vite: {
